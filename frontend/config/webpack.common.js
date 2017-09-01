@@ -192,7 +192,7 @@ module.exports = function (options) {
          */
         {
           test: /\.(jpg|png|gif)$/,
-          use: 'file-loader'
+          use: 'file-loader?name=assets/img/[name].[ext]'
         },
 
         /* File loader for supporting fonts, for example, in CSS files.
