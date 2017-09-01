@@ -16,12 +16,16 @@ import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppService } from './app.service';
 import { OverviewComponent } from './overview';
+import { LoginComponent } from './login/login.component';
 import { UiComponentsModule } from './ui-components';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/mergeMap';
 import 'tether';
+import 'popper.js';
 import 'bootstrap';
+import 'jquery-easing';
+import 'startbootstrap-agency/js/agency';
 import '../styles/styles.scss';
 
 // Application wide providers
@@ -44,6 +48,7 @@ export function createTranslateLoader(http: Http) {
   declarations: [
     AppComponent,
     OverviewComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

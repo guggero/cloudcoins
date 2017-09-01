@@ -1,7 +1,18 @@
 /* this file will be extracted to main dist folder and is imported in index.html */
 /* This file is for setting global styles  */
-@import 'definitions';
 @import '~bootstrap/dist/css/bootstrap.css';
-@import url('https://fonts.googleapis.com/css?family=Roboto:100,300|Ubuntu:400,500|Dosis');
+@import '~font-awesome/css/font-awesome.min.css';
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700|Kaushan+Script|Droid+Serif:400,700,400italic,700italic|Roboto+Slab:400,100,300,700');
+@import '~startbootstrap-agency/css/agency.css';
 
+body app header.masthead {
+  background-image: url('../assets/img/sky-690293_1280.jpg');
+}
 
+section#contact {
+  background-image: url("../assets/img/map-image.png");
+}
+
+div.intro-text {
+  color: black;
+}

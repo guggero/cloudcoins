@@ -168,7 +168,11 @@ module.exports = function (options) {
          */
         {
           test: /\.scss$/,
-          use: ['to-string-loader', 'css-loader', 'sass-loader'],
+          use: [
+            { loader: 'to-string-loader' },
+            { loader: 'css-loader' },
+            { loader: 'sass-loader', options: { publicPath: '/assets/' } }
+          ],
           exclude: [helpers.root('src', 'styles')]
         },
 
@@ -207,18 +211,14 @@ module.exports = function (options) {
      * See: http://webpack.github.io/docs/configuration.html#plugins
      */
     plugins: [
-      new AssetsPlugin({
-        path: helpers.root('dist'),
-        filename: 'webpack-assets.json',
-        prettyPrint: true
-      }),
 
       // vendor support
       new ProvidePlugin({
         jQuery: 'jquery',
         '$': 'jquery',
         jquery: 'jquery',
-        Tether: 'tether'
+        Tether: 'tether',
+        Popper: 'popper.js',
       }),
 
       /*
@@ -276,9 +276,9 @@ module.exports = function (options) {
        * See: https://www.npmjs.com/package/copy-webpack-plugin
        */
       new CopyWebpackPlugin([
-        {from: 'src/assets', to: 'assets'},
-        {from: 'src/assets/robots.txt'},
-      ], {copyUnmodified: true}),
+        { from: 'src/assets', to: 'assets' },
+        { from: 'src/assets/robots.txt' },
+      ], { copyUnmodified: true }),
 
 
       /*

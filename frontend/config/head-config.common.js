@@ -14,5 +14,13 @@
  *
  */
 module.exports = {
+  link: [
+    { rel: 'apple-touch-icon', sizes: '32x32', href: '/assets/icon/cloudcoins-32x32.png' },
+    { rel: 'apple-touch-icon', sizes: '96x96', href: '/assets/icon/cloudcoins-96x96.png' },
+    { rel: 'apple-touch-icon', sizes: '600x600', href: '/assets/icon/cloudcoins-600x600.png' },
 
+    { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/assets/icon/cloudcoins-32x32.png' },
+    { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/assets/icon/cloudcoins-96x96.png' },
+    { rel: 'icon', type: 'image/png', sizes: '600x600', href: '/assets/icon/cloudcoins-600x600.png' },
+  ]
 };
