@@ -17,6 +17,8 @@ cache:
     - frontend/node_modules
     - $HOME/.m2
 
+before_install:
+  - export TZ=Europe/Zurich
 install: mvn clean compile -Dmaven.javadoc.skip=true -B -V
 before_script:
   - export DISPLAY=:99.0
