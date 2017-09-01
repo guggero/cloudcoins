@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%date{ISO8601}",
+                        "logLevel": "%-5level",
+                        "thread": "%thread",
+                        "logger": "%logger{36}",
+                        "msg": "%msg"
+                        }
+                    </pattern>
+                </pattern>
+                <mdc/>
+                <stackTrace>
+                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                        <maxDepthPerThrowable>30</maxDepthPerThrowable>
+                        <maxLength>2048</maxLength>
+                        <shortenedClassNameLength>36</shortenedClassNameLength>
+                        <exclude>sun\.reflect\..*\.invoke.*</exclude>
+                        <exclude>net\.sf\.cglib\.proxy\.MethodProxy\.invoke</exclude>
+                        <rootCauseFirst>true</rootCauseFirst>
+                    </throwableConverter>
+                </stackTrace>
+            </providers>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <logger name="ch.cloudcoins" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="org.hibernate.SQL" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="org.hibernate.type" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="org.hibernate.stat" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+</configuration>

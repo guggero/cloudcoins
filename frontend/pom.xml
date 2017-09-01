@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ch.cloudcoins</groupId>
+        <artifactId>cloudcoins-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <artifactId>cloudcoins-frontend</artifactId>
+    <packaging>war</packaging>
+
+    <properties>
+        <versionString>${project.artifactId}:${project.version}</versionString>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+    </properties>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <version>${version.org.codehaus.gmaven}</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <!-- @formatter:off -->
+                            <source>
+                                String gitRevision = "git rev-parse --short HEAD".execute().text.trim()
+                                String versionString = project.properties["versionString"];
+                                String mavenBuildTimestamp = project.properties["timestamp"];
+                                project.properties["buildId"] = versionString + " (" + gitRevision + "@" + mavenBuildTimestamp + ")";
+                            </source>
+                            <!-- @formatter:on -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${version.maven-clean-plugin}</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>dist</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>compiled</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>dll</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${version.war.plugin}</version>
+                <configuration>
+                    <webResources>
+                        <!-- filter only the index HTML file -->
+                        <resource>
+                            <directory>dist</directory>
+                            <includes>
+                                <include>index.html</include>
+                            </includes>
+                            <filtering>true</filtering>
+                        </resource>
+                        <!-- everything else is not filtered -->
+                        <resource>
+                            <directory>dist</directory>
+                            <excludes>
+                                <exclude>index.html</exclude>
+                            </excludes>
+                            <filtering>false</filtering>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <!-- NB! Set <version> to the latest released version of frontend-maven-plugin, like in README.md -->
+                <version>${version.com.github.eirslett}</version>
+
+                <configuration>
+                    <installDirectory>target</installDirectory>
+                </configuration>
+
+                <executions>
+
+                    <execution>
+                        <id>install node and yarn</id>
+                        <goals>
+                            <goal>install-node-and-yarn</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v6.11.2</nodeVersion>
+                            <yarnVersion>v0.27.5</yarnVersion>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>yarn install</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>yarn build</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <arguments>run build:aot:prod</arguments>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wildfly.bom</groupId>
+            <artifactId>wildfly-javaee7-with-tools</artifactId>
+            <version>${version.jboss.bom}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>${version.javaee-api}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${version.javax.servlet-api}</version>
+        </dependency>
+    </dependencies>
+</project>

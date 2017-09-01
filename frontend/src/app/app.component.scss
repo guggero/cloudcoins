@@ -1,0 +1,7 @@
+@import '../styles/definitions';
+
+@media #{$desktop} {
+  .container {
+    width: $content-width;
+  }
+}
