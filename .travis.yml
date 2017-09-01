@@ -1,7 +1,7 @@
 sudo: required
 language: java
 
-dist: trusty
+dist: precise
 addons:
   apt:
     sources:
