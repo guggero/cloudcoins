@@ -219,6 +219,7 @@ module.exports = function (options) {
         jquery: 'jquery',
         Tether: 'tether',
         Popper: 'popper.js',
+        crypto: 'crypto-browserify',
       }),
 
       /*
@@ -379,12 +380,11 @@ module.exports = function (options) {
      */
     node: {
       global: true,
-      crypto: 'empty',
       process: true,
+      crypto: true,
       module: false,
       clearImmediate: false,
       setImmediate: false
     }
-
   };
 };

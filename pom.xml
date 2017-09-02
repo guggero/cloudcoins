@@ -33,7 +33,6 @@
         <version.org.hibernate>5.0.7.Final</version.org.hibernate>
         <version.resteasy>3.0.19.Final</version.resteasy>
         <version.jbossws.native.core>4.2.1.Final</version.jbossws.native.core>
-        <version.poi>3.13</version.poi>
 
         <version.maven-assembly-plugin>2.5.5</version.maven-assembly-plugin>
         <version.maven-javadoc-plugin>2.10.3</version.maven-javadoc-plugin>
@@ -122,11 +121,6 @@
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-cdi</artifactId>
                 <version>${version.liquibase}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi-ooxml</artifactId>
-                <version>${version.poi}</version>
             </dependency>
             <dependency>
                 <!-- logging adapter to prevent liquibase from logging to stderr -->

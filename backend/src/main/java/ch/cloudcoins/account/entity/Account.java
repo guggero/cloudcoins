@@ -2,7 +2,6 @@ package ch.cloudcoins.account.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Entity
 public class Account {
@@ -21,6 +20,9 @@ public class Account {
 
     @NotNull
     private String password;
+
+    @NotNull
+    private String otpAuthKey;
 
     public Account() {
 
@@ -56,5 +58,13 @@ public class Account {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getOtpAuthKey() {
+        return otpAuthKey;
+    }
+
+    public void setOtpAuthKey(String otpAuthKey) {
+        this.otpAuthKey = otpAuthKey;
     }
 }

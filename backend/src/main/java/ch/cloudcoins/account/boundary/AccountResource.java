@@ -2,8 +2,7 @@ package ch.cloudcoins.account.boundary;
 
 import ch.cloudcoins.account.control.AccountRepository;
 import ch.cloudcoins.account.entity.Account;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.warrenstrange.googleauth.GoogleAuthenticator;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -21,24 +20,29 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Produces(APPLICATION_JSON)
 public class AccountResource {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccountResource.class);
-
     @Inject
     private AccountRepository repository;
 
     @POST
-    public Response addAccount(Account account) {
-        if (account == null) {
+    public Response addAccount(@QueryParam("otp") Integer auth, Account account) {
+        if (account == null || auth == null) {
             return businessError();
         }
-        repository.persist(account);
-        return ok();
+
+        GoogleAuthenticator gAuth = new GoogleAuthenticator();
+        boolean isCodeValid = gAuth.authorize(account.getOtpAuthKey(), auth);
+
+        if (isCodeValid) {
+            repository.persist(account);
+            return ok();
+        }
+        return businessError();
     }
 
     @GET
     @Path("/salt")
-    public Response getSaltByEmail(@QueryParam("email") String email) {
-        if (email == null || email.isEmpty()) {
+    public Response getSaltByEmail(@QueryParam("email") String email, @QueryParam("auth") Integer auth) {
+        if (email == null || email.isEmpty() || auth == null) {
             return entityNotFound();
         }
         Account account = repository.findByEmail(email);
@@ -46,9 +50,15 @@ public class AccountResource {
             return entityNotFound();
         }
 
-        return ok(new HashMap<String, String>() {{
-            put("salt", account.getSalt());
-        }});
+        GoogleAuthenticator gAuth = new GoogleAuthenticator();
+        boolean isCodeValid = gAuth.authorize(account.getOtpAuthKey(), auth);
+
+        if (isCodeValid) {
+            return ok(new HashMap<String, String>() {{
+                put("salt", account.getSalt());
+            }});
+        }
+        return businessError();
     }
 
     @POST

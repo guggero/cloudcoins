@@ -21,6 +21,9 @@
             <column name="password" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
+            <column name="otpauthkey" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addPrimaryKey tableName="account" columnNames="id" constraintName="account_pk"/>

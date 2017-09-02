@@ -11,16 +11,16 @@ export class BackendService {
   constructor(private http: Http) {
   }
 
-  public createAccount(account: any): Observable<any> {
+  public createAccount(account: any, otp: number): Observable<any> {
     return this.http
-      .post(`${API_URL}/accounts`, account, this.buildRequestOptions())
+      .post(`${API_URL}/accounts?otp=${otp}`, account, this.buildRequestOptions())
       .map((res: Response) => res.status)
       .catch(this.handleError);
   }
 
-  public getSalt(email: string): Observable<string> {
+  public getSalt(email: string, otp: number): Observable<string> {
     return this.http
-      .get(`${API_URL}/accounts/salt?email=${encodeURIComponent(email)}`)
+      .get(`${API_URL}/accounts/salt?email=${encodeURIComponent(email)}&auth=${otp}`)
       .map((response) => response.json().salt)
       .catch(this.handleError);
   }

@@ -23,7 +23,7 @@ export class Account {
   constructor(public email: string,
               public salt: string,
               public backendIdentification: string,
-              public encryptionKey?: Buffer) {
+              public otpAuthKey?: string) {
   }
 
   public getPersistablePart(): any {
@@ -31,6 +31,7 @@ export class Account {
       email: this.email,
       salt: this.salt,
       password: this.backendIdentification,
+      otpAuthKey: this.otpAuthKey,
     };
   }
 }
@@ -38,13 +39,12 @@ export class Account {
 @Injectable()
 export class CryptoService {
 
-  public createAccount(email: string, password: string): Account {
+  public createAccount(email: string, password: string, otpAuthKey: string): Account {
     const salt = createSalt(16);
     const saltStr = salt.toString('hex');
     const pwHash1 = sha256String(saltStr + password);
-    const encryptionKey = pbkdf2Sync(pwHash1, salt, PBKDF2_ROUNDS, PBKDF2_HMAC_LEN, PBKDF2_DIGEST);
     const pwHash2 = sha256String(saltStr + pwHash1.toString('hex'));
-    return new Account(email, saltStr, pwHash2.toString('hex'), encryptionKey);
+    return new Account(email, saltStr, pwHash2.toString('hex'), otpAuthKey);
   }
 
   public getLoginData(email: string, password: string, salt: string): Account {

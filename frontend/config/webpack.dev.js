@@ -4,7 +4,7 @@
 
 const helpers = require('./helpers');
 const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const webpackMergeDll = webpackMerge.strategy({plugins: 'replace'});
+const webpackMergeDll = webpackMerge.strategy({ plugins: 'replace' });
 const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
 
 /**
@@ -23,7 +23,7 @@ const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');
 const API_URL = process.env.API_URL = 'http://localhost:8080/backend/api';
-const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
+const METADATA = webpackMerge(commonConfig({ env: ENV }).metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV,
@@ -40,7 +40,7 @@ const DllBundlesPlugin = require('webpack-dll-bundles-plugin').DllBundlesPlugin;
  * See: http://webpack.github.io/docs/configuration.html#cli
  */
 module.exports = function (options) {
-  return webpackMerge(commonConfig({env: ENV}), {
+  return webpackMerge(commonConfig({ env: ENV }), {
 
     /**
      * Developer tool to enhance debugging
@@ -182,7 +182,7 @@ module.exports = function (options) {
           ]
         },
         dllDir: helpers.root('dll'),
-        webpackConfig: webpackMergeDll(commonConfig({env: ENV}), {
+        webpackConfig: webpackMergeDll(commonConfig({ env: ENV }), {
           devtool: 'source-map',
           plugins: []
         })
@@ -197,8 +197,8 @@ module.exports = function (options) {
        * See: https://github.com/SimenB/add-asset-html-webpack-plugin
        */
       new AddAssetHtmlPlugin([
-        {filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('polyfills')}`)},
-        {filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('vendor')}`)}
+        { filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('polyfills')}`) },
+        { filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('vendor')}`) }
       ]),
 
       /**
@@ -247,7 +247,7 @@ module.exports = function (options) {
      */
     node: {
       global: true,
-      crypto: 'empty',
+      crypto: true,
       process: true,
       module: false,
       clearImmediate: false,

@@ -77,6 +77,25 @@
         Please type the words "I understand that nobody can restore my password if I forget it"
       </div>
     </div>
+
+    <div class="form-group col-lg-8">
+      <p>
+        To secure your account, please setup 2-factor authentication using an OTP app like Google Authenticator to scan
+        the following QR code:<br/>
+        <img [src]="qrCode"/>
+      </p>
+      <label for="otp">Verification code</label>
+      <input type="number"
+             name="otp"
+             class="form-control"
+             formControlName="otp"
+             [ngClass]="{'is-invalid': (otp.dirty || otp.touched) && otp.invalid}"
+             id="otp">
+      <div class="form-control-feedback invalid"
+           *ngIf="(otp.dirty || otp.touched) && otp.invalid">
+        Please scan the QR code with a TOTP compatible app (like Google Authenticator) and enter the generated code.
+      </div>
+    </div>
   </form>
 
   <div class="col-lg-8" *ngIf="errorMessage === null && !showSuccessMessage">

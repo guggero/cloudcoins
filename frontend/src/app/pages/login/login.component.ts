@@ -20,12 +20,13 @@ export class LoginComponent {
     this.loginForm = formBuilder.group({
       email: ['', [Validators.required, Validators.pattern(EMAIL_REG_EXP)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
+      otp: ['', [Validators.required]]
     });
   }
 
   public login(value) {
     const errFn = (err) => this.onError(err);
-    this.backendService.getSalt(value.email)
+    this.backendService.getSalt(value.email, value.otp)
       .subscribe((salt) => {
         this.backendService.login(this.cryptoService.getLoginData(value.email, value.password, salt))
           .subscribe(() => this.onSuccess(), errFn);
@@ -35,11 +36,13 @@ export class LoginComponent {
   private onSuccess() {
     this.errorMessage = null;
     this.showSuccessMessage = true;
+    window.scrollTo(0, 0);
   }
 
   private onError(err: any) {
     this.showSuccessMessage = false;
     this.errorMessage = err;
+    window.scrollTo(0, 0);
   }
 
   get email() {
@@ -48,5 +51,9 @@ export class LoginComponent {
 
   get password() {
     return this.loginForm.get('password');
+  }
+
+  get otp() {
+    return this.loginForm.get('otp');
   }
 }
