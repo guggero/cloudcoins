@@ -6,6 +6,7 @@
 
     <persistence-unit name="cloudcoins">
         <jta-data-source>java:jboss/datasources/cloudcoins</jta-data-source>
+        <mapping-file>META-INF/named-queries.xml</mapping-file>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL94Dialect"/>
             <property name="hibernate.show_sql" value="false"/>

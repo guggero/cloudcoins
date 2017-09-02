@@ -165,6 +165,10 @@ public abstract class BaseRepository<T> {
         return entityManager.createQuery(query);
     }
 
+    protected TypedQuery<T> createNamedQuery(String queryName) {
+        return entityManager.createNamedQuery(queryName, entityType);
+    }
+
     protected CriteriaBuilder getCriteriaBuilder() {
         return entityManager.getCriteriaBuilder();
     }

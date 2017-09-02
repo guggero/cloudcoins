@@ -1,7 +1,15 @@
 <section>
   <h2 class="section-heading">Create account</h2>
 
-  <form name="accountform" [formGroup]="accountForm">
+  <div class="alert alert-success" role="alert" *ngIf="showSuccessMessage">
+    <strong>Success!</strong> Your account has been created. You can <a routerLink="/login">now log in</a>.
+  </div>
+
+  <div class="alert alert-danger" role="alert" *ngIf="errorMessage !== null">
+    <strong>Error!</strong> Something went wrong: {{errorMessage | json}}
+  </div>
+
+  <form name="accountForm" [formGroup]="accountForm" *ngIf="errorMessage === null && !showSuccessMessage">
 
     <div class="form-group col-lg-8">
       <label for="email" class="col-form-label">Email address</label>
@@ -71,13 +79,13 @@
     </div>
   </form>
 
-  <div class="col-lg-8">
+  <div class="col-lg-8" *ngIf="errorMessage === null && !showSuccessMessage">
     <div class="float-right">
       <button type="button"
               class="btn btn-primary"
               (click)="createAccount(accountForm.value)"
               [disabled]="accountForm.invalid">
-        Continue
+        Create account
       </button>
     </div>
   </div>

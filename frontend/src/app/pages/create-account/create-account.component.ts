@@ -4,8 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { matchOtherValidator, matchValueValidator } from '../../ui-components/functions';
 import { BackendService } from '../../services/backend.service';
 import { CryptoService } from '../../services/crypto.service';
-
-export const EMAIL_REG_EXP: RegExp = /.*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?[.]+)+(?:[a-z0-9-]{2,})+?$/;
+import { EMAIL_REG_EXP } from '../../ui-components/globals';
 
 @Component({
   selector: 'create-account',
@@ -16,23 +15,34 @@ export const EMAIL_REG_EXP: RegExp = /.*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?[.]+)
 export class CreateAccountComponent {
 
   public accountForm: FormGroup;
+  public showSuccessMessage: boolean = false;
+  public errorMessage: any = null;
 
   constructor(private backendService: BackendService, private cryptoService: CryptoService, private formBuilder: FormBuilder) {
     this.accountForm = formBuilder.group({
-      email: ['gugger@gmail.com', [Validators.required, Validators.pattern(EMAIL_REG_EXP)]],
-      password: ['abcABC123', [Validators.required, Validators.minLength(8)]],
-      passwordRepeat: ['abcABC123', [Validators.required, matchOtherValidator('password')]],
+      email: ['', [Validators.required, Validators.pattern(EMAIL_REG_EXP)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      passwordRepeat: ['', [Validators.required, matchOtherValidator('password')]],
       confirmation: [
-        'I understand that nobody can restore my password if I forget it',
+        '',
         [Validators.required, matchValueValidator('I understand that nobody can restore my password if I forget it')]],
     });
   }
 
   public createAccount(value) {
-    const salt = this.cryptoService.createSalt(16);
-    const pwHash1 = this.cryptoService.sha256String(salt + value.password);
-    const pwHash2 = this.cryptoService.sha256String(salt + pwHash1.toString('hex'));
+    const account = this.cryptoService.createAccount(value.email, value.password);
+    this.backendService.createAccount(account.getPersistablePart())
+      .subscribe(() => this.onSuccess(), (err) => this.onError(err));
+  }
 
+  private onSuccess() {
+    this.errorMessage = null;
+    this.showSuccessMessage = true;
+  }
+
+  private onError(err: any) {
+    this.showSuccessMessage = false;
+    this.errorMessage = err;
   }
 
   get email() {
