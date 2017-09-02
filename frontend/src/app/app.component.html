@@ -1,7 +1,8 @@
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top"
+     [ngClass]="{'content-page': currentPageKey !== 'overview', 'navbar-shrink': currentPageKey !== 'overview'}"
+     id="mainNav">
   <div class="container">
-    <a class="navbar-brand js-scroll-trigger" href="#page-top">Cloudcoins</a>
+    <a class="navbar-brand js-scroll-trigger" href="/pages/overview#page-top">Cloudcoins</a>
     <button class="navbar-toggler navbar-toggler-right"
             type="button"
             data-toggle="collapse"
@@ -14,26 +15,49 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" href="/overview#services">Service</a>
+        <li class="nav-item" *ngIf="currentPageKey === 'overview'">
+          <a class="nav-link js-scroll-trigger" href="/pages/overview#services">Service</a>
+        </li>
+        <li class="nav-item" *ngIf="currentPageKey === 'overview'">
+          <a class="nav-link js-scroll-trigger" href="/pages/overview#team">Team</a>
+        </li>
+        <li class="nav-item" *ngIf="currentPageKey === 'overview'">
+          <a class="nav-link js-scroll-trigger" href="/pages/overview#contact">Contact</a>
+        </li>
+        <li class="nav-item" *ngIf="currentPageKey !== 'overview'">
+          <a class="nav-link" routerLink="/overview">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" href="/overview#team">Team</a>
+          <a class="nav-link" routerLink="/create-account">Create account</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" href="/overview#contact">Sign up</a>
+          <a class="nav-link" routerLink="/login">Log in</a>
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" href="/login">Log in</a>
-        </li> -->
       </ul>
     </div>
   </div>
 </nav>
 
-<router-outlet></router-outlet>
 
-<!-- Footer -->
+<div class="page-wrapper" [ngClass]="{'content-page': currentPageKey !== 'overview'}">
+  <header class="masthead" *ngIf="currentPageKey === 'overview'">
+    <div class="container">
+      <div class="intro-text">
+        <div class="intro-lead-in">Welcome to Cloudcoins!</div>
+        <div class="intro-heading">secure altcoin key store</div>
+        <a class="btn btn-xl js-scroll-trigger" routerLink="/create-account" fragment="contact">Create account now</a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="side-nav" id="side-nav" *ngIf="currentPageKey !== 'overview'">
+
+  </nav>
+  <div [ngClass]="{'container': currentPageKey !== 'overview'}">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
 <footer>
   <div class="container">
     <div class="row">
@@ -41,6 +65,13 @@
         <span class="copyright">Copyright &copy; Cloudcoins 2017</span>
       </div>
       <div class="col-md-4">
+        <ul class="list-inline social-buttons">
+          <li class="list-inline-item">
+            <a href="https://github.com/guggero/cloudcoins">
+              <i class="fa fa-github"></i>
+            </a>
+          </li>
+        </ul>
       </div>
       <div class="col-md-4">
       </div>

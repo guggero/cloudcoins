@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Http, HttpModule } from '@angular/http';
 import { ApplicationRef, NgModule } from '@angular/core';
 import { createInputTransfer, createNewHosts, removeNgStyles } from '@angularclass/hmr';
@@ -14,9 +14,10 @@ import { ROUTES } from './app.routes';
 // app components
 import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
-import { AppService } from './app.service';
-import { OverviewComponent } from './overview';
-import { LoginComponent } from './login/login.component';
+import { RoutesService } from './services/routes.service';
+import { CreateAccountComponent } from './pages/create-account';
+import { LoginComponent } from './pages/login/login.component';
+import { OverviewComponent } from './pages/overview';
 import { UiComponentsModule } from './ui-components';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/filter';
@@ -25,13 +26,16 @@ import 'tether';
 import 'popper.js';
 import 'bootstrap';
 import 'jquery-easing';
-import 'startbootstrap-agency/js/agency';
 import '../styles/styles.scss';
+import { BackendService } from './services/backend.service';
+import { CryptoService } from './services/crypto.service';
 
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
-  AppService,
+  BackendService,
+  CryptoService,
+  RoutesService,
 ];
 
 type StoreType = {
@@ -47,12 +51,14 @@ export function createTranslateLoader(http: Http) {
   bootstrap: [AppComponent],
   declarations: [
     AppComponent,
-    OverviewComponent,
+    CreateAccountComponent,
     LoginComponent,
+    OverviewComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES, {useHash: false, preloadingStrategy: PreloadAllModules}),
     TranslateModule.forRoot({

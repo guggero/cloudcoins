@@ -3,16 +3,34 @@
 @import '~bootstrap/dist/css/bootstrap.css';
 @import '~font-awesome/css/font-awesome.min.css';
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,700|Kaushan+Script|Droid+Serif:400,700,400italic,700italic|Roboto+Slab:400,100,300,700');
-@import '~startbootstrap-agency/css/agency.css';
-
-body app header.masthead {
-  background-image: url('../assets/img/sky-690293_1280.jpg');
-}
-
-section#contact {
-  background-image: url("../assets/img/map-image.png");
-}
+@import './agency';
 
 div.intro-text {
   color: black;
+}
+
+div.page-wrapper.content-page {
+  background-image: url('../assets/img/sky-690293_1280.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: top left;
+  background-size: 100% 829px;
+  padding-top: 74px;
+  padding-bottom: 20px;
+
+  div.container {
+    padding-top: 20px;
+    background-color: white;
+    min-height: 829px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px black;
+  }
+}
+
+div.container section {
+  padding: 0;
+}
+
+div.form-control-feedback.invalid {
+  color: #dc3545;
 }

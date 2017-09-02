@@ -11,9 +11,6 @@ import { NgPipesModule } from 'ngx-pipes';
     CommonModule,
     RouterModule,
     TranslateModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgPipesModule
   ],
   declarations: [
 

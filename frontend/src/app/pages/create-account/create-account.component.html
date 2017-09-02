@@ -1,0 +1,84 @@
+<section>
+  <h2 class="section-heading">Create account</h2>
+
+  <form name="accountform" [formGroup]="accountForm">
+
+    <div class="form-group col-lg-8">
+      <label for="email" class="col-form-label">Email address</label>
+      <input type="email"
+             name="email"
+             class="form-control"
+             formControlName="email"
+             [ngClass]="{'is-invalid': (email.dirty || email.touched) && email.invalid}"
+             id="email">
+      <div class="form-control-feedback invalid"
+           *ngIf="(email.dirty || email.touched) && email.invalid">
+        A valid email address is required.
+      </div>
+      <small class="form-text text-muted">This will be your username for logging in</small>
+    </div>
+
+    <div class="form-group col-lg-8">
+      <label for="password">Password</label>
+      <input type="password"
+             name="password"
+             class="form-control"
+             formControlName="password"
+             [ngClass]="{'is-invalid': (password.dirty || password.touched) && password.invalid}"
+             id="password">
+      <div class="form-control-feedback invalid"
+           *ngIf="(password.dirty || password.touched) && password.invalid">
+        The password is not long enough.
+      </div>
+      <small class="form-text text-muted">Choose a secure password that you can remember</small>
+    </div>
+
+    <div class="form-group col-lg-8">
+      <label for="passwordRepeat">Type password again</label>
+      <input type="password"
+             name="passwordRepeat"
+             class="form-control"
+             formControlName="passwordRepeat"
+             [ngClass]="{'is-invalid': (passwordRepeat.dirty || passwordRepeat.touched) && passwordRepeat.invalid}"
+             id="passwordRepeat">
+      <div class="form-control-feedback invalid"
+           *ngIf="(passwordRepeat.dirty || passwordRepeat.touched) && passwordRepeat.invalid">
+        The passwords do not match.
+      </div>
+      <small class="form-text text-muted">Please repeat the password you have entered above</small>
+    </div>
+
+    <div class="form-group col-lg-8">
+      <p class="form-text text-muted">
+        We only store a hashed version of your password in our database. This cannot be restored.<br/>
+        <strong>If you forget your password, your encrypted keys will be lost!</strong><br/>
+        Please make sure you remember the password and/or have written it down somewhere safe.<br/>
+        To make sure you understand the consequences of losing your password, please type the following sentence in
+        the text field below:<br/>
+        <kbd>I understand that nobody can restore my password if I forget it</kbd>
+      </p>
+      <label for="confirmation">Type the sentence from above text</label>
+      <input type="text"
+             name="confirmation"
+             class="form-control"
+             formControlName="confirmation"
+             [ngClass]="{'is-invalid': (confirmation.dirty || confirmation.touched) && confirmation.invalid}"
+             id="confirmation">
+      <div class="form-control-feedback invalid"
+           *ngIf="(confirmation.dirty || confirmation.touched) && confirmation.invalid">
+        Please type the words "I understand that nobody can restore my password if I forget it"
+      </div>
+    </div>
+  </form>
+
+  <div class="col-lg-8">
+    <div class="float-right">
+      <button type="button"
+              class="btn btn-primary"
+              (click)="createAccount(accountForm.value)"
+              [disabled]="accountForm.invalid">
+        Continue
+      </button>
+    </div>
+  </div>
+</section>
