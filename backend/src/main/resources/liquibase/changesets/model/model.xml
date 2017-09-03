@@ -71,6 +71,9 @@
             <column name="id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
             <column name="key" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
@@ -111,7 +114,8 @@
         </createTable>
 
         <addPrimaryKey tableName="keyposition" columnNames="id" constraintName="keyposition_pk"/>
-        <addUniqueConstraint tableName="keyposition" columnNames="keychain_id,cointype" constraintName="keyposition_keychain_cointype_uk"/>
+        <addUniqueConstraint tableName="keyposition" columnNames="keychain_id,cointype"
+                             constraintName="keyposition_keychain_cointype_uk"/>
 
         <addForeignKeyConstraint baseTableName="keyposition" baseColumnNames="keychain_id"
                                  constraintName="keyposition_keychain_id_fk" deferrable="false"

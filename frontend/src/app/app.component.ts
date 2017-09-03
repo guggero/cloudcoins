@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { Observable } from 'rxjs/Observable';
 import * as $ from 'jquery';
 import { RoutesService } from './services/routes.service';
+import { SessionService } from './services/session.service';
 
 @Component({
   selector: 'app',
@@ -15,7 +16,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public currentPageKey: string;
 
-  constructor(private translate: TranslateService, private routesService: RoutesService) {
+  constructor(private translate: TranslateService, private routesService: RoutesService,
+              public sessionService: SessionService) {
   }
 
   public ngOnInit(): void {

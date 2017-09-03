@@ -2,7 +2,7 @@
      [ngClass]="{'content-page': currentPageKey !== 'overview', 'navbar-shrink': currentPageKey !== 'overview'}"
      id="mainNav">
   <div class="container">
-    <a class="navbar-brand js-scroll-trigger" href="/pages/overview#page-top">Cloudcoins</a>
+    <a class="navbar-brand js-scroll-trigger" href="/overview#page-top">Cloudcoins</a>
     <button class="navbar-toggler navbar-toggler-right"
             type="button"
             data-toggle="collapse"
@@ -16,22 +16,31 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item" *ngIf="currentPageKey === 'overview'">
-          <a class="nav-link js-scroll-trigger" href="/pages/overview#services">Service</a>
+          <a class="nav-link js-scroll-trigger" href="/overview#services">Service</a>
         </li>
         <li class="nav-item" *ngIf="currentPageKey === 'overview'">
-          <a class="nav-link js-scroll-trigger" href="/pages/overview#team">Team</a>
+          <a class="nav-link js-scroll-trigger" href="/overview#team">Team</a>
         </li>
         <li class="nav-item" *ngIf="currentPageKey === 'overview'">
-          <a class="nav-link js-scroll-trigger" href="/pages/overview#contact">Contact</a>
+          <a class="nav-link js-scroll-trigger" href="/overview#contact">Contact</a>
         </li>
         <li class="nav-item" *ngIf="currentPageKey !== 'overview'">
           <a class="nav-link" routerLink="/overview">Home</a>
         </li>
-        <li class="nav-item">
+        <!-- only when not logged in -->
+        <li class="nav-item" *ngIf="!sessionService.isLoggedIn()">
           <a class="nav-link" routerLink="/create-account">Create account</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="!sessionService.isLoggedIn()">
           <a class="nav-link" routerLink="/login">Log in</a>
+        </li>
+
+        <!-- only when logged in -->
+        <li class="nav-item" *ngIf="sessionService.isLoggedIn()">
+          <a class="nav-link" routerLink="/my-keychains">My keychains</a>
+        </li>
+        <li class="nav-item" *ngIf="sessionService.isLoggedIn()">
+          <a class="nav-link" routerLink="/logout">Log out</a>
         </li>
       </ul>
     </div>
@@ -50,9 +59,6 @@
     </div>
   </header>
 
-  <nav class="side-nav" id="side-nav" *ngIf="currentPageKey !== 'overview'">
-
-  </nav>
   <div [ngClass]="{'container': currentPageKey !== 'overview'}">
     <router-outlet></router-outlet>
   </div>

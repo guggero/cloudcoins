@@ -17,6 +17,7 @@ import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { RoutesService } from './services/routes.service';
 import { CreateAccountComponent } from './pages/create-account';
 import { LoginComponent } from './pages/login/login.component';
+import { LogoutComponent } from './pages/logout/logout.component';
 import { OverviewComponent } from './pages/overview';
 import { UiComponentsModule } from './ui-components';
 import 'rxjs/add/observable/of';
@@ -29,6 +30,8 @@ import 'jquery-easing';
 import '../styles/styles.scss';
 import { BackendService } from './services/backend.service';
 import { CryptoService } from './services/crypto.service';
+import { SessionService } from './services/session.service';
+import { MyKeychainsComponent } from './pages/my-keychains/my-keychains.component';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -36,6 +39,7 @@ const APP_PROVIDERS = [
   BackendService,
   CryptoService,
   RoutesService,
+  SessionService,
 ];
 
 type StoreType = {
@@ -53,6 +57,8 @@ export function createTranslateLoader(http: Http) {
     AppComponent,
     CreateAccountComponent,
     LoginComponent,
+    LogoutComponent,
+    MyKeychainsComponent,
     OverviewComponent,
   ],
   imports: [

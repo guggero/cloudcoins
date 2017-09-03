@@ -1,7 +1,9 @@
 import * as randomBytes from 'randombytes';
-import { crypto } from 'bitcoinjs-lib';
+import { crypto, HDNode, networks } from 'bitcoinjs-lib';
 import { Injectable } from '@angular/core';
 import { pbkdf2Sync } from 'pbkdf2';
+import { AES, enc } from 'crypto-js';
+import { generateMnemonic, mnemonicToSeed } from 'bip39';
 
 export const PBKDF2_HMAC_LEN = 64;
 export const PBKDF2_ROUNDS = 10240;
@@ -17,6 +19,20 @@ export function sha256String(str: string): Buffer {
 
 export function sha256Buffer(buffer: Buffer): Buffer {
   return crypto.sha256(buffer);
+}
+
+export function createEncryptionKey(password: string, salt: string): Buffer {
+  return strenghtenPasswordPBKDF2(sha256String(salt + password), Buffer.from(salt, 'hex'));
+}
+
+export function strenghtenPasswordPBKDF2(password: Buffer, salt: Buffer): Buffer {
+  return pbkdf2Sync(password, salt, PBKDF2_ROUNDS, PBKDF2_HMAC_LEN, PBKDF2_DIGEST);
+}
+
+export function generateDeterministicNode(): string {
+  const seed = mnemonicToSeed(generateMnemonic());
+  const node = HDNode.fromSeedBuffer(seed, networks.bitcoin);
+  return node.toBase58();
 }
 
 export class Account {
@@ -36,6 +52,20 @@ export class Account {
   }
 }
 
+export interface KeyPosition {
+  id: number;
+  coinType: number;
+  index: number;
+}
+
+export interface Keychain {
+  id?: number;
+  name: string;
+  key: string;
+  createdAt?: Date;
+  positions: KeyPosition[];
+}
+
 @Injectable()
 export class CryptoService {
 
@@ -51,5 +81,13 @@ export class CryptoService {
     const pwHash1 = sha256String(salt + password);
     const pwHash2 = sha256String(salt + pwHash1.toString('hex'));
     return new Account(email, salt, pwHash2.toString('hex'));
+  }
+
+  public decrypt(key: string, encrypted: string): string {
+    return AES.decrypt(encrypted, key).toString(enc.Utf8);
+  }
+
+  public encrypt(key: string, plaintext: string): string {
+    return AES.encrypt(plaintext, key).toString();
   }
 }

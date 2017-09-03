@@ -3,6 +3,7 @@ package ch.cloudcoins.account.boundary;
 import ch.cloudcoins.account.control.AccountRepository;
 import ch.cloudcoins.account.entity.Account;
 import ch.cloudcoins.security.boundary.PermitAll;
+import ch.cloudcoins.security.control.LoginContextHolder;
 import ch.cloudcoins.security.control.TokenService;
 import ch.cloudcoins.security.entity.LoginContext;
 import ch.cloudcoins.security.entity.Token;
@@ -11,7 +12,6 @@ import com.warrenstrange.googleauth.GoogleAuthenticator;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Objects;
@@ -99,7 +99,8 @@ public class AccountResource {
 
     @POST
     @Path("/logout")
-    public Response logout(@Context LoginContext context) {
+    public Response logout() {
+        LoginContext context = LoginContextHolder.get();
         tokenService.invalidateToken(context.getToken());
         return ok();
     }
