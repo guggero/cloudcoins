@@ -324,7 +324,7 @@ module.exports = function (env) {
     node: {
       global: true,
       crypto: true,
-      process: false,
+      process: true,
       module: false,
       clearImmediate: false,
       setImmediate: false
