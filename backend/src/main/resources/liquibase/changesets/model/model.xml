@@ -29,4 +29,93 @@
         <addPrimaryKey tableName="account" columnNames="id" constraintName="account_pk"/>
         <addUniqueConstraint tableName="account" columnNames="email" constraintName="account_email_uk"/>
     </changeSet>
+
+    <changeSet id="0.0.1-model-2" author="guggero">
+        <comment>login token</comment>
+
+        <createSequence sequenceName="token_seq"/>
+
+        <createTable tableName="token">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tokenstring" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creationtime" type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="validuntil" type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="token" columnNames="id" constraintName="token_pk"/>
+        <addUniqueConstraint tableName="token" columnNames="tokenstring" constraintName="token_tokenstring_uk"/>
+
+        <addForeignKeyConstraint baseTableName="token" baseColumnNames="account_id"
+                                 constraintName="token_account_id_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="account"/>
+    </changeSet>
+
+    <changeSet id="0.0.1-model-3" author="guggero">
+        <comment>key chains</comment>
+
+        <createSequence sequenceName="keychain_seq"/>
+
+        <createTable tableName="keychain">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="key" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdat" type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="keychain" columnNames="id" constraintName="keychain_pk"/>
+
+        <addForeignKeyConstraint baseTableName="keychain" baseColumnNames="account_id"
+                                 constraintName="keychain_account_id_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="account"/>
+    </changeSet>
+
+    <changeSet id="0.0.1-model-4" author="guggero">
+        <comment>key positions</comment>
+
+        <createSequence sequenceName="keyposition_seq"/>
+
+        <createTable tableName="keyposition">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="keychain_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cointype" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="index" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="keyposition" columnNames="id" constraintName="keyposition_pk"/>
+        <addUniqueConstraint tableName="keyposition" columnNames="keychain_id,cointype" constraintName="keyposition_keychain_cointype_uk"/>
+
+        <addForeignKeyConstraint baseTableName="keyposition" baseColumnNames="keychain_id"
+                                 constraintName="keyposition_keychain_id_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="keychain"/>
+    </changeSet>
 </databaseChangeLog>

@@ -1,8 +1,10 @@
 package ch.cloudcoins;
 
+import ch.cloudcoins.boundary.ErrorMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
@@ -12,9 +14,12 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static ch.cloudcoins.MessageKey.ERROR_ENTITY_NOT_FOUND;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.*;
 
 /**
@@ -92,32 +97,22 @@ public abstract class EntityResource<T> {
     }
 
     public static Response entityNotFound() {
-        return createResponse(NOT_FOUND);
+        return createErrorResponse(NOT_FOUND, ERROR_ENTITY_NOT_FOUND);
     }
 
-    public static Response businessError() {
-        return createResponse(BAD_REQUEST, null);
+    public static Response businessError(MessageKey messageKey, Object... values) {
+        return createErrorResponse(BAD_REQUEST, messageKey, values);
     }
 
-    public static Response businessError(String message) {
-        return createResponse(BAD_REQUEST, message);
+    public static Response internalServerError(MessageKey messageKey) {
+        return createErrorResponse(INTERNAL_SERVER_ERROR, messageKey);
     }
 
-    public static Response internalServerError() {
-        return createResponse(INTERNAL_SERVER_ERROR);
-    }
-
-    private static Response createResponse(Response.Status status) {
-        return createResponse(status, null);
-    }
-
-    private static Response createResponse(Response.Status status, String message) {
-        Response.ResponseBuilder responseBuilder = Response.status(status);
-        if (message != null) {
-            LOGGER.info("Returning response with status" + status + " and message " + message);
-            return responseBuilder.entity(message).build();
-        }
-        LOGGER.info("Returning response with status" + status);
-        return responseBuilder.build();
+    private static Response createErrorResponse(Response.Status status, MessageKey messageKey, Object... values) {
+        String message = messageKey.getKey();
+        String statusText = status.getStatusCode() + " (" + status.getReasonPhrase() + ")";
+        LOGGER.info("Returning " + statusText + " error with key '{}' and values {}.", message, Arrays.toString(values));
+        JsonObject error = ErrorMapper.create().addMessageKey(message, values).build();
+        return Response.status(status).type(APPLICATION_JSON).entity(error).build();
     }
 }

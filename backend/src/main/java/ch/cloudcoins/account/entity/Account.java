@@ -1,7 +1,13 @@
 package ch.cloudcoins.account.entity;
 
+import ch.cloudcoins.keychain.entity.Keychain;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Account {
@@ -23,6 +29,10 @@ public class Account {
 
     @NotNull
     private String otpAuthKey;
+
+    @OneToMany(mappedBy = "account")
+    @JsonManagedReference("account-keychain")
+    private Set<Keychain> keychains = new HashSet<>();
 
     public Account() {
 
@@ -66,5 +76,31 @@ public class Account {
 
     public void setOtpAuthKey(String otpAuthKey) {
         this.otpAuthKey = otpAuthKey;
+    }
+
+    public Set<Keychain> getKeychains() {
+        return keychains;
+    }
+
+    public void setKeychains(Set<Keychain> keychains) {
+        this.keychains = keychains;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Account account = (Account) o;
+        return Objects.equals(id, account.id) &&
+                Objects.equals(email, account.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email);
     }
 }

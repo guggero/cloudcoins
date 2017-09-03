@@ -11,11 +11,12 @@ The project is in a very early stage, so this is work in progress.
 ### start local database
 
 ```bash
-docker run -d\
- --name cloudcoins_postgres\
- -e POSTGRESQL_USER=cloudcoins\
- -e POSTGRESQL_PASSWORD=cloudcoins\
- -e POSTGRESQL_DATABASE=cloudcoins\
- -p 5432:5432\
+docker run -d \
+ -e POSTGRESQL_USER=cloudcoins \
+ -e POSTGRESQL_PASSWORD=cloudcoins \
+ -e POSTGRESQL_DATABASE=cloudcoins \
+ -p 5436:5432 \
+ --restart always \
+ --name cloudcoins_postgres \
  centos/postgresql-95-centos7
 ```

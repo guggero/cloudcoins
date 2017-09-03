@@ -5,10 +5,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Provides generic functions for CRUD operations on a JPA entity.
@@ -28,6 +25,10 @@ public abstract class BaseRepository<T> {
 
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+
+    protected void flush() {
+        this.entityManager.flush();
     }
 
     /**
@@ -157,6 +158,18 @@ public abstract class BaseRepository<T> {
         return resultList.get(0);
     }
 
+    protected EntityGraph<T> getGraph() {
+        return entityManager.createEntityGraph(entityType);
+    }
+
+    protected T findWithGraph(EntityGraph<T> graph, long id) {
+        Map<String, Object> hints = new HashMap<>();
+        hints.put("javax.persistence.loadgraph", graph);
+
+        T entity = entityManager.find(entityType, id, hints);
+        return entity;
+    }
+
     protected CriteriaQuery<T> createQuery() {
         return getCriteriaBuilder().createQuery(entityType);
     }
@@ -165,12 +178,22 @@ public abstract class BaseRepository<T> {
         return entityManager.createQuery(query);
     }
 
+    protected Query createNoTypedNamedQuery(String queryName) {
+        return entityManager.createNamedQuery(queryName);
+    }
+
     protected TypedQuery<T> createNamedQuery(String queryName) {
         return entityManager.createNamedQuery(queryName, entityType);
     }
 
     protected CriteriaBuilder getCriteriaBuilder() {
         return entityManager.getCriteriaBuilder();
+    }
+
+    protected TypedQuery<T> createNamedQueryWithGraph(String queryName, EntityGraph<T> graph) {
+        TypedQuery<T> query = createNamedQuery(queryName);
+        query.setHint("javax.persistence.loadgraph", graph);
+        return query;
     }
 
     protected Predicate lowercaseLike(From<?, ?> from, String attributeName, String keyword) {

@@ -28,7 +28,7 @@ export class LoginComponent {
     const errFn = (err) => this.onError(err);
     this.backendService.getSalt(value.email, value.otp)
       .subscribe((salt) => {
-        this.backendService.login(this.cryptoService.getLoginData(value.email, value.password, salt))
+        this.backendService.login(this.cryptoService.getLoginData(value.email, value.password, salt), value.otp)
           .subscribe(() => this.onSuccess(), errFn);
       }, errFn);
   }

@@ -8,4 +8,16 @@
         <query>select a from Account a where a.email = :email</query>
     </named-query>
 
+    <named-query name="Keychain.findByAccount">
+        <query>select k from Keychain k where k.account.id = :accountId</query>
+    </named-query>
+
+    <named-query name="KeyPosition.findByKeychainAndCoinType">
+        <query>select p from KeyPosition p where p.keychain.id = :keychainId and p.coinType = :coinType</query>
+    </named-query>
+
+    <named-query name="Token.findByTokenString">
+        <query>select t from Token t where t.tokenString = :token</query>
+    </named-query>
+
 </entity-mappings>

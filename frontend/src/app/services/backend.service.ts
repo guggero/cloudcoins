@@ -20,14 +20,14 @@ export class BackendService {
 
   public getSalt(email: string, otp: number): Observable<string> {
     return this.http
-      .get(`${API_URL}/accounts/salt?email=${encodeURIComponent(email)}&auth=${otp}`)
+      .get(`${API_URL}/accounts/salt?email=${encodeURIComponent(email)}&otp=${otp}`)
       .map((response) => response.json().salt)
       .catch(this.handleError);
   }
 
-  public login(account: Account): Observable<any> {
+  public login(account: Account, otp: number): Observable<any> {
     return this.http
-      .post(`${API_URL}/accounts/login`, account.getPersistablePart(), this.buildRequestOptions())
+      .post(`${API_URL}/accounts/login?otp=${otp}`, account.getPersistablePart(), this.buildRequestOptions())
       .map((response) => response.json())
       .catch(this.handleError);
   }
