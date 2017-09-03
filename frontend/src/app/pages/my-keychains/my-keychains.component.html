@@ -11,7 +11,17 @@
     <tbody>
     <tr *ngFor="let keychain of keychains">
       <td>{{keychain.name}}</td>
-      <td>{{cryptoService.decrypt(sessionService.getKey(), keychain.key)}}</td>
+      <td>
+        <var>{{keychain.decryptedKey.toBase58()}}</var>
+        <div *ngIf="keychain.positions && keychain.positions.length > 0">
+          <div *ngFor="let pair of keychain.positions[0].keyPairs">
+            Private key: <var>{{pair.privKeyWif}}</var><br/>
+            Address: <var>{{pair.address}}</var><br/>
+            <hr/>
+          </div>
+        </div>
+        <button type="button" class="btn" (click)="newKey(keychain)">New key</button>
+      </td>
     </tr>
     <tr *ngIf="!keychains || keychains.length === 0">
       <td colspan="2"><em>You don't have any keychains yet.</em></td>

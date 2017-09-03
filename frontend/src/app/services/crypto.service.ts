@@ -35,6 +35,10 @@ export function generateDeterministicNode(): string {
   return node.toBase58();
 }
 
+export function parseNode(base58: string): any {
+  return HDNode.fromBase58(base58, networks.bitcoin);
+}
+
 export class Account {
   constructor(public email: string,
               public salt: string,
@@ -52,16 +56,23 @@ export class Account {
   }
 }
 
+export interface KeyPair {
+  privKeyWif: string;
+  address: string;
+}
+
 export interface KeyPosition {
   id: number;
   coinType: number;
   index: number;
+  keyPairs?: KeyPair[];
 }
 
 export interface Keychain {
   id?: number;
   name: string;
   key: string;
+  decryptedKey?: any;
   createdAt?: Date;
   positions: KeyPosition[];
 }

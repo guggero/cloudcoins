@@ -59,7 +59,7 @@ export class BackendService {
 
   public increasePosition(keychain: Keychain, coinType: number): Observable<KeyPosition> {
     return this.http
-      .post(`${API_URL}/keychains/${keychain.id}/positions/${coinType}`, null, this.buildRequestOptions())
+      .post(`${API_URL}/keychains/${keychain.id}/positions/${coinType}/increase`, null, this.buildRequestOptions())
       .map((response) => response.json())
       .catch(this.handleError);
   }
