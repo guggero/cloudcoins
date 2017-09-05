@@ -193,9 +193,7 @@ module.exports = function (env) {
         output: {
           comments: false
         }, //prod
-        mangle: {
-          screw_ie8: true
-        }, //prod
+        mangle: false,
         compress: {
           screw_ie8: true,
           warnings: false,

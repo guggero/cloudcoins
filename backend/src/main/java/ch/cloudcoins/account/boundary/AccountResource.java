@@ -8,6 +8,8 @@ import ch.cloudcoins.security.control.TokenService;
 import ch.cloudcoins.security.entity.LoginContext;
 import ch.cloudcoins.security.entity.Token;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -26,6 +28,8 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Consumes(APPLICATION_JSON)
 @Produces(APPLICATION_JSON)
 public class AccountResource {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AccountResource.class);
 
     @Inject
     private AccountRepository repository;
