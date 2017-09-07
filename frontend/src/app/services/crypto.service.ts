@@ -2,8 +2,9 @@ import * as randomBytes from 'randombytes';
 import { crypto, HDNode, networks } from 'bitcoinjs-lib';
 import { Injectable } from '@angular/core';
 import { pbkdf2Sync } from 'pbkdf2';
-import { AES, enc } from 'crypto-js';
+import { AES, enc, HmacSHA512 } from 'crypto-js';
 import { generateMnemonic, mnemonicToSeed } from 'bip39';
+
 
 export const PBKDF2_HMAC_LEN = 64;
 export const PBKDF2_ROUNDS = 10240;
@@ -37,6 +38,10 @@ export function generateDeterministicNode(): string {
 
 export function parseNode(base58: string): any {
   return HDNode.fromBase58(base58, networks.bitcoin);
+}
+
+export function hmacSha512(sha512: string): any {
+  return HmacSHA512('Seed version', sha512);
 }
 
 export class Account {

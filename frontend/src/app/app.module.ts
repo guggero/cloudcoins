@@ -32,6 +32,7 @@ import { BackendService } from './services/backend.service';
 import { CryptoService } from './services/crypto.service';
 import { SessionService } from './services/session.service';
 import { MyKeychainsComponent } from './pages/my-keychains/my-keychains.component';
+import { ImportKeychainsComponent } from './pages/import-keychains/import-keychains.component';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -58,6 +59,7 @@ export function createTranslateLoader(http: Http) {
     CreateAccountComponent,
     LoginComponent,
     LogoutComponent,
+    ImportKeychainsComponent,
     MyKeychainsComponent,
     OverviewComponent,
   ],
