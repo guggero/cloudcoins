@@ -1,33 +1,57 @@
 <section>
   <h2 class="section-heading">My Keychains</h2>
 
-  <table>
-    <thead>
-    <tr>
-      <th>Name</th>
-      <th>BIP32 master key</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let keychain of keychains">
-      <td>{{keychain.name}}</td>
-      <td>
-        <var>{{keychain.decryptedKey.toBase58()}}</var>
-        <div *ngIf="keychain.positions && keychain.positions.length > 0">
-          <div *ngFor="let pair of keychain.positions[0].keyPairs">
-            Private key: <var>{{pair.privKeyWif}}</var><br/>
-            Address: <var>{{pair.address}}</var><br/>
-            <hr/>
+  <div class="row">
+    <table class="col-6">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>BIP32 master key</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let keychain of keychains; let idx = index;" [class.active]="idx === selectedChain">
+        <td>{{keychain.name}}</td>
+        <td>
+          <a (click)="selectedChain = idx">{{keychain.decryptedKey.toBase58().substring(0, 32)}}...</a><br/>
+        </td>
+      </tr>
+      <tr *ngIf="!keychains || keychains.length === 0">
+        <td colspan="2"><em>You don't have any keychains yet.</em></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="selectedChain !== null" class="col-6">
+      <h4>Addresses for keychain {{keychains[selectedChain].name}}</h4>
+
+      <ul class="nav nav-tabs">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"
+             data-toggle="dropdown">
+            {{coins[selectedCoin].label}}
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item"
+               *ngFor="let coin of coins; let idx = index;"
+               (click)="selectedCoin = idx">
+              {{coin.label}}
+            </a>
           </div>
+        </li>
+      </ul>
+
+
+      <div *ngIf="keychains[selectedChain].positions && keychains[selectedChain].positions.length > 0">
+        <div *ngFor="let pair of keychains[selectedChain].positions[0].keyPairs">
+          Private key: <var>{{pair.privKeyWif}}</var><br/>
+          Address: <var>{{pair.address}}</var><br/>
+          <hr/>
         </div>
-        <button type="button" class="btn" (click)="newKey(keychain)">New key</button>
-      </td>
-    </tr>
-    <tr *ngIf="!keychains || keychains.length === 0">
-      <td colspan="2"><em>You don't have any keychains yet.</em></td>
-    </tr>
-    </tbody>
-  </table>
+      </div>
+      <button type="button" class="btn" (click)="newKey(keychains[selectedChain])">New key</button>
+    </div>
+  </div>
 </section>
 
 <section>

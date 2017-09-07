@@ -9,6 +9,7 @@ import {
   parseNode
 } from '../../services/crypto.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NETWORKS } from '../../networks';
 
 export const COIN_TYPE_BITCOIN = 0;
 
@@ -21,7 +22,11 @@ export const COIN_TYPE_BITCOIN = 0;
 export class MyKeychainsComponent implements OnInit {
 
   public keychains: Keychain[];
+  public selectedChain: number = null;
   public keychainForm: FormGroup;
+
+  public coins: any[] = NETWORKS;
+  public selectedCoin: number = 0;
 
   constructor(public cryptoService: CryptoService, public sessionService: SessionService,
               private backendService: BackendService, private formBuilder: FormBuilder) {
@@ -40,6 +45,9 @@ export class MyKeychainsComponent implements OnInit {
           keychain.decryptedKey = parseNode(this.cryptoService.decrypt(this.sessionService.getKey(), keychain.key));
           keychain.positions.forEach((position) => this.calculateKeys(keychain, position));
         });
+        if (this.keychains.length > 0 && this.selectedChain === null) {
+          this.selectedChain = 0;
+        }
       });
   }
 

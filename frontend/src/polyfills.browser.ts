@@ -1,7 +1,5 @@
 // Polyfills
-
 // import 'ie-shim'; // Internet Explorer 9 support
-
 // import 'core-js/es6';
 // Added parts of es6 which are necessary for your project or your browser support requirements.
 import 'core-js/es6/symbol';
@@ -26,6 +24,9 @@ import 'core-js/es6/reflect';
 
 import 'core-js/es7/reflect';
 import 'zone.js/dist/zone';
+
+// tslint:disable-next-line
+(<any>window).Popper = require('popper.js').default;
 
 if ('production' === ENV) {
   // Production

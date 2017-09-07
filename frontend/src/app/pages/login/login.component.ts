@@ -27,6 +27,9 @@ export class LoginComponent {
   }
 
   public login(value) {
+    if (!this.loginForm.valid) {
+      return;
+    }
     const errFn = (err) => this.onError(err);
     this.backendService.getSalt(value.email, value.otp)
       .subscribe((salt) => {

@@ -9,7 +9,11 @@
     <strong>Error!</strong> Something went wrong: {{errorMessage | json}}
   </div>
 
-  <form name="loginForm" [formGroup]="loginForm" *ngIf="errorMessage === null && !showSuccessMessage">
+  <form name="loginForm"
+        [formGroup]="loginForm"
+        (submit)="login(loginForm.value)"
+        (keyup.enter)="login(loginForm.value)"
+        *ngIf="!showSuccessMessage">
 
     <div class="form-group col-lg-8">
       <label for="email" class="col-form-label">Email address</label>
@@ -54,7 +58,7 @@
     </div>
   </form>
 
-  <div class="col-lg-8" *ngIf="errorMessage === null && !showSuccessMessage">
+  <div class="col-lg-8" *ngIf="!showSuccessMessage">
     <div class="float-right">
       <button type="button"
               class="btn btn-primary"

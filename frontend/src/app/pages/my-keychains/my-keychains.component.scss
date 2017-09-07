@@ -1,5 +1,24 @@
 table {
   th, td {
     vertical-align: top;
+    padding: 5px;
+  }
+  thead {
+    th {
+      border-bottom: 1px solid black;
+    }
+  }
+  tr.active {
+    td {
+      background-color: #ddd;
+    }
+  }
+  tr:not(.active) {
+    td a {
+      text-decoration: underline;
+      cursor: pointer;
+    }
   }
 }
+
+
