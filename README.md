@@ -20,3 +20,9 @@ docker run -d \
  --name cloudcoins_postgres \
  centos/postgresql-95-centos7
 ```
+
+### import test data OTP key
+
+Scan the following QR code with your 2FA App to get OTP passwords for the test account:
+
+[![QR Code](doc/test-account-2fa-qrcode.png)]
