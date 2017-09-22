@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BackendService } from '../../services/backend.service';
 import { createEncryptionKey, CryptoService } from '../../services/crypto.service';
 import { SessionService } from '../../services/session.service';
+import { createErrorHandler } from '../../ui-components/functions';
 
 @Component({
   selector: 'login',
@@ -13,8 +14,8 @@ import { SessionService } from '../../services/session.service';
 export class LoginComponent {
 
   public loginForm: FormGroup;
-  public showSuccessMessage: boolean = false;
-  public errorMessage: any = null;
+  public notificationKey: string = null;
+  public isSuccess: boolean = false;
 
   constructor(private backendService: BackendService, private cryptoService: CryptoService,
               private formBuilder: FormBuilder, private sessionService: SessionService) {
@@ -29,7 +30,7 @@ export class LoginComponent {
     if (!this.loginForm.valid) {
       return;
     }
-    const errFn = (err) => this.onError(err);
+    const errFn = createErrorHandler(this);
     this.backendService.getSalt(value.username, value.otp)
       .subscribe((salt) => {
         const loginData = this.cryptoService.getLoginData(value.username, value.password, salt);
@@ -39,17 +40,11 @@ export class LoginComponent {
   }
 
   private onSuccess(token: string, password: string, salt: string) {
-    this.errorMessage = null;
-    this.showSuccessMessage = true;
+    this.notificationKey = 'login.successful';
+    this.isSuccess = true;
     window.scrollTo(0, 0);
     const encKey = createEncryptionKey(password, salt);
     this.sessionService.storeSession(token, encKey.toString('hex'));
-  }
-
-  private onError(err: any) {
-    this.showSuccessMessage = false;
-    this.errorMessage = err;
-    window.scrollTo(0, 0);
   }
 
   get username() {

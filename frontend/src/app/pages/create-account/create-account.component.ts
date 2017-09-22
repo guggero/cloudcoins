@@ -3,7 +3,7 @@ import * as speakeasy from 'speakeasy';
 import * as QRCode from 'qrcode';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { matchOtherValidator, matchValueValidator } from '../../ui-components/functions';
+import { createErrorHandler, matchOtherValidator, matchValueValidator } from '../../ui-components/functions';
 import { BackendService } from '../../services/backend.service';
 import { CryptoService } from '../../services/crypto.service';
 
@@ -18,8 +18,8 @@ export class CreateAccountComponent {
   public accountForm: FormGroup;
   public secret: any;
   public qrCode: string;
-  public showSuccessMessage: boolean = false;
-  public errorMessage: any = null;
+  public notificationKey: string = null;
+  public isSuccess: boolean = false;
 
   constructor(private backendService: BackendService, private cryptoService: CryptoService, private formBuilder: FormBuilder) {
     this.accountForm = formBuilder.group({
@@ -40,18 +40,12 @@ export class CreateAccountComponent {
   public createAccount(value) {
     const account = this.cryptoService.createAccount(value.username, value.password, this.secret.base32);
     this.backendService.createAccount(account.getPersistablePart(), value.otp)
-      .subscribe(() => this.onSuccess(), (err) => this.onError(err));
+      .subscribe(() => this.onSuccess(), createErrorHandler(this));
   }
 
   private onSuccess() {
-    this.errorMessage = null;
-    this.showSuccessMessage = true;
-    window.scrollTo(0, 0);
-  }
-
-  private onError(err: any) {
-    this.showSuccessMessage = false;
-    this.errorMessage = err;
+    this.notificationKey = 'create-account.successful';
+    this.isSuccess = true;
     window.scrollTo(0, 0);
   }
 

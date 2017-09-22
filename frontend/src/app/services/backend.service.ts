@@ -65,7 +65,7 @@ export class BackendService {
   }
 
   private handleError(error: any) {
-    return Observable.throw(error.json().errors);
+    return Observable.throw(error.json());
   }
 
   private buildRequestOptions(): RequestOptions {

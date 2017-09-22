@@ -1,2 +1,12 @@
 {
+  "ch.cloudcoins.errors.invalidAccess": "Access denied!",
+  "ch.cloudcoins.errors.entityNotFound": "Item not found!",
+  "ch.cloudcoins.errors.entityMissing": "Invalid input!",
+  "ch.cloudcoins.errors.invalidInput": "Invalid input!",
+  "ch.cloudcoins.errors.invalidState": "Invalid state!",
+  "ch.cloudcoins.errors.concurrentUpdateOccured": "Concurrent update, refresh page and try again!",
+  "ch.cloudcoins.errors.internalServerError": "Server error. Please try again.",
+  "ch.cloudcoins.errors.usernameExists": "The chosen username already exists.",
+  "login.successful": "You are now logged in.",
+  "create-account.successful": "Your account has been created. You can now log in."
 }

@@ -61,7 +61,7 @@ public class AccountResource {
             repository.persist(account);
             return ok();
         }
-        return businessError(ERROR_INVALID_ACCESS);
+        return businessError(ERROR_INVALID_INPUT);
     }
 
     @GET

@@ -1,19 +1,13 @@
 <section>
   <h2 class="section-heading">Login</h2>
 
-  <div class="alert alert-success" role="alert" *ngIf="showSuccessMessage">
-    <strong>Success!</strong> You are now logged in!
-  </div>
-
-  <div class="alert alert-danger" role="alert" *ngIf="errorMessage !== null">
-    <strong>Error!</strong> Something went wrong: {{errorMessage | json}}
-  </div>
+  <notification [notificationKey]="notificationKey" [isSuccess]="isSuccess"></notification>
 
   <form name="loginForm"
         [formGroup]="loginForm"
         (submit)="login(loginForm.value)"
         (keyup.enter)="login(loginForm.value)"
-        *ngIf="!showSuccessMessage">
+        *ngIf="!isSuccess">
 
     <div class="form-group col-lg-8">
       <label for="username" class="col-form-label">Username</label>
@@ -58,7 +52,7 @@
     </div>
   </form>
 
-  <div class="col-lg-8" *ngIf="!showSuccessMessage">
+  <div class="col-lg-8" *ngIf="!isSuccess">
     <div class="float-right">
       <button type="button"
               class="btn btn-primary"

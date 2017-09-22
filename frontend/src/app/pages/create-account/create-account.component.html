@@ -1,18 +1,12 @@
 <section>
   <h2 class="section-heading">Create account</h2>
 
-  <div class="alert alert-success" role="alert" *ngIf="showSuccessMessage">
-    <strong>Success!</strong> Your account has been created. You can <a routerLink="/login">now log in</a>.
-  </div>
-
-  <div class="alert alert-danger" role="alert" *ngIf="errorMessage !== null">
-    <strong>Error!</strong> Something went wrong: {{errorMessage | json}}
-  </div>
+  <notification [notificationKey]="notificationKey" [isSuccess]="isSuccess"></notification>
 
   <form name="accountForm"
         [formGroup]="accountForm"
         (keyup.enter)="createAccount(accountForm.value)"
-        *ngIf="!showSuccessMessage">
+        *ngIf="!isSuccess">
 
     <div class="form-group col-lg-8">
       <label for="username" class="col-form-label">Username</label>
@@ -101,7 +95,7 @@
     </div>
   </form>
 
-  <div class="col-lg-8" *ngIf="!showSuccessMessage">
+  <div class="col-lg-8" *ngIf="!isSuccess">
     <div class="float-right">
       <button type="button"
               class="btn btn-primary"

@@ -1,70 +1,9 @@
 <section>
   <h2 class="section-heading">Import Keychains</h2>
 
-  <table>
-    <thead>
-    <tr>
-      <th>Name</th>
-      <th>Electrum Seed</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let keychain of keychains">
-      <td>{{keychain.name}}</td>
-      <td>
-        <var>{{keychain.decryptedKey.toBase58()}}</var>
-        <div *ngIf="keychain.positions && keychain.positions.length > 0">
-          <div *ngFor="let pair of keychain.positions[0].keyPairs">
-            Private key: <var>{{pair.privKeyWif}}</var><br/>
-            Address: <var>{{pair.address}}</var><br/>
-            <hr/>
-          </div>
-        </div>
-        <button type="button" class="btn" (click)="newKey(keychain)">New key</button>
-      </td>
-    </tr>
-    <tr *ngIf="!keychains || keychains.length === 0">
-      <td colspan="2"><em>You don't have any keychains yet.</em></td>
-    </tr>
-    </tbody>
-  </table>
-</section>
-<section>
+  <p>On this page you can import keychains from other wallet software.</p>
+
   <h3>Add Electrum Seed</h3>
 
-  <form name="electrumForm" [formGroup]="electrumForm">
 
-    <div class="form-group col-lg-8">
-      <label for="name" class="col-form-label">Name</label>
-      <input type="text"
-             name="name"
-             class="form-control"
-             formControlName="name"
-             [ngClass]="{'is-invalid': (name.dirty || name.touched) && name.invalid}"
-             id="name">
-      <div class="form-control-feedback invalid"
-           *ngIf="(name.dirty || name.touched) && name.invalid">
-        Please enter a name.
-      </div>
-    </div>
-
-    <div class="form-group col-lg-8">
-      <label for="electrumseed" class="col-form-label">Electrum Seed</label>
-      <input type="text"
-             name="electrumseed"
-             class="form-control"
-             formControlName="electrumseed">
-    </div>
-  </form>
-
-  <div class="col-lg-8">
-    <div class="float-right">
-      <button type="button"
-              class="btn btn-primary"
-              (click)="save(electrumForm.value)"
-              [disabled]="electrumForm.invalid">
-        Return Hex
-      </button>
-    </div>
-  </div>
 </section>

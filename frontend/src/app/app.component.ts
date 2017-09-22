@@ -76,11 +76,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private setDefaultLanguage(): void {
+    this.setLanguage('en');
+    /* TODO: translate everything, then remove this comment
     let currentBrowserLanguage = this.translate.getBrowserCultureLang().slice(0, 2);
     if (currentBrowserLanguage === 'de') {
       this.setLanguage('de');
     } else {
       this.setLanguage('en');
-    }
+    }*/
   }
 }
