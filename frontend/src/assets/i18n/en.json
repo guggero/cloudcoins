@@ -8,5 +8,6 @@
   "ch.cloudcoins.errors.internalServerError": "Server error. Please try again.",
   "ch.cloudcoins.errors.usernameExists": "The chosen username already exists.",
   "login.successful": "You are now logged in.",
-  "create-account.successful": "Your account has been created. You can now log in."
+  "create-account.successful": "Your account has been created. You can now log in.",
+  "send-message.successful": "Thank you for your message."
 }

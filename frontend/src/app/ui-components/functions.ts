@@ -50,7 +50,7 @@ export function matchValueValidator(value: string) {
   };
 }
 
-export function createErrorHandler(component: any): (error: any) => void {
+export function createErrorHandler(component: any, scrollUp = true): (error: any) => void {
   return (err: any): void => {
     if (!err) {
       return;
@@ -61,6 +61,8 @@ export function createErrorHandler(component: any): (error: any) => void {
       component.notificationKey = errors[0].messageKey;
     }
     component.isSuccess = false;
-    window.scrollTo(0, 0);
+    if (scrollUp) {
+      window.scrollTo(0, 0);
+    }
   };
 }

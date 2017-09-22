@@ -15,6 +15,13 @@ export class BackendService {
   constructor(private http: Http, private sessionService: SessionService) {
   }
 
+  public createMessage(captcha: any, message: any): Observable<any> {
+    return this.http
+      .post(`${API_URL}/contact?captcha=${encodeURIComponent(captcha)}`, message, this.buildRequestOptions())
+      .map((res: Response) => res.status)
+      .catch(this.handleError);
+  }
+
   public createAccount(account: any, otp: number): Observable<any> {
     return this.http
       .post(`${API_URL}/accounts?otp=${otp}`, account, this.buildRequestOptions())

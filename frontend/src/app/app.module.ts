@@ -8,6 +8,7 @@ import { PreloadAllModules, RouterModule } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgPipesModule } from 'ngx-pipes';
+import { ReCaptchaModule } from 'angular2-recaptcha';
 // general app configuration
 import { ENV_PROVIDERS } from './environment';
 import { ROUTES } from './app.routes';
@@ -77,6 +78,7 @@ export function createTranslateLoader(http: Http) {
       }
     }),
     NgPipesModule,
+    ReCaptchaModule,
     UiComponentsModule
   ],
   providers: [
