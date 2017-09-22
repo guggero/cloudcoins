@@ -16,16 +16,16 @@
         *ngIf="!showSuccessMessage">
 
     <div class="form-group col-lg-8">
-      <label for="email" class="col-form-label">Email address</label>
-      <input type="email"
-             name="email"
+      <label for="username" class="col-form-label">Username</label>
+      <input type="text"
+             name="username"
              class="form-control"
-             formControlName="email"
-             [ngClass]="{'is-invalid': (email.dirty || email.touched) && email.invalid}"
-             id="email">
+             formControlName="username"
+             [ngClass]="{'is-invalid': (username.dirty || username.touched) && username.invalid}"
+             id="username">
       <div class="form-control-feedback invalid"
-           *ngIf="(email.dirty || email.touched) && email.invalid">
-        Please enter a valid email address.
+           *ngIf="(username.dirty || username.touched) && username.invalid">
+        The username needs to be at least 3 characters long.
       </div>
     </div>
 

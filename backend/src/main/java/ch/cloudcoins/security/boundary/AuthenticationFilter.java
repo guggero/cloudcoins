@@ -51,12 +51,12 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         String tokenString = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length()).trim();
         Token token = tokenService.validateToken(tokenString);
 
-        String email = token.getAccount().getEmail();
-        LoginContext context = new LoginContext(token.getAccount(), email, token.getTokenString());
+        String username = token.getAccount().getUsername();
+        LoginContext context = new LoginContext(token.getAccount(), username, token.getTokenString());
         LoginContextHolder.set(context);
 
-        // update email in MDC so it will be logged for each request
-        MDC.put("email", email);
+        // update username in MDC so it will be logged for each request
+        MDC.put("username", username);
 
         if (refreshSession) {
             UserTransaction userTransaction = startTransaction();

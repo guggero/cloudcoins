@@ -18,7 +18,8 @@ public class Account {
     private Long id;
 
     @NotNull
-    private String email;
+    @Column(unique = true)
+    private String username;
 
     @NotNull
     @Column(length = 32)
@@ -46,12 +47,12 @@ public class Account {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getSalt() {
@@ -96,11 +97,11 @@ public class Account {
         }
         Account account = (Account) o;
         return Objects.equals(id, account.id) &&
-                Objects.equals(email, account.email);
+                Objects.equals(username, account.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email);
+        return Objects.hash(id, username);
     }
 }

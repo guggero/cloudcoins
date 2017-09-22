@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BackendService } from '../../services/backend.service';
 import { createEncryptionKey, CryptoService } from '../../services/crypto.service';
-import { EMAIL_REG_EXP } from '../../ui-components/globals';
 import { SessionService } from '../../services/session.service';
 
 @Component({
@@ -20,7 +19,7 @@ export class LoginComponent {
   constructor(private backendService: BackendService, private cryptoService: CryptoService,
               private formBuilder: FormBuilder, private sessionService: SessionService) {
     this.loginForm = formBuilder.group({
-      email: ['', [Validators.required, Validators.pattern(EMAIL_REG_EXP)]],
+      username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       otp: ['', [Validators.required]]
     });
@@ -31,9 +30,9 @@ export class LoginComponent {
       return;
     }
     const errFn = (err) => this.onError(err);
-    this.backendService.getSalt(value.email, value.otp)
+    this.backendService.getSalt(value.username, value.otp)
       .subscribe((salt) => {
-        const loginData = this.cryptoService.getLoginData(value.email, value.password, salt);
+        const loginData = this.cryptoService.getLoginData(value.username, value.password, salt);
         this.backendService.login(loginData, value.otp)
           .subscribe((token) => this.onSuccess(token, value.password, salt), errFn);
       }, errFn);
@@ -53,8 +52,8 @@ export class LoginComponent {
     window.scrollTo(0, 0);
   }
 
-  get email() {
-    return this.loginForm.get('email');
+  get username() {
+    return this.loginForm.get('username');
   }
 
   get password() {

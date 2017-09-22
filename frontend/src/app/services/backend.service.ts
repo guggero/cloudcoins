@@ -22,9 +22,9 @@ export class BackendService {
       .catch(this.handleError);
   }
 
-  public getSalt(email: string, otp: number): Observable<string> {
+  public getSalt(username: string, otp: number): Observable<string> {
     return this.http
-      .get(`${API_URL}/accounts/salt?email=${encodeURIComponent(email)}&otp=${otp}`)
+      .get(`${API_URL}/accounts/salt?username=${encodeURIComponent(username)}&otp=${otp}`)
       .map((response) => response.json().salt)
       .catch(this.handleError);
   }

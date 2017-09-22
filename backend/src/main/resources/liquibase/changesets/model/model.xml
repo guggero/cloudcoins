@@ -122,4 +122,12 @@
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="keychain"/>
     </changeSet>
+
+    <changeSet id="0.0.2-model-1" author="guggero">
+        <comment>rename email to username</comment>
+
+        <dropUniqueConstraint tableName="account" constraintName="account_email_uk"/>
+        <renameColumn tableName="account" oldColumnName="email" newColumnName="username"/>
+        <addUniqueConstraint tableName="account" columnNames="username" constraintName="account_username_uk"/>
+    </changeSet>
 </databaseChangeLog>
