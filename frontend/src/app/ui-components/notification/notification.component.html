@@ -1,0 +1,9 @@
+<div *ngIf="notificationKey">
+  <div class="alert alert-success" role="alert" *ngIf="isSuccess">
+    <strong>Success!</strong> {{notificationKey | translate}}
+  </div>
+
+  <div class="alert alert-danger" role="alert" *ngIf="!isSuccess">
+    <strong>Error!</strong> Something went wrong: {{notificationKey | translate}}
+  </div>
+</div>

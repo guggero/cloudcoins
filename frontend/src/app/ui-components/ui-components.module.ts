@@ -3,8 +3,7 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgPipesModule } from 'ngx-pipes';
+import { NotificationComponent } from './notification/notification.component';
 
 @NgModule({
   imports: [
@@ -13,9 +12,10 @@ import { NgPipesModule } from 'ngx-pipes';
     TranslateModule,
   ],
   declarations: [
-
+    NotificationComponent,
   ],
   exports: [
+    NotificationComponent,
   ]
 })
 export class UiComponentsModule {

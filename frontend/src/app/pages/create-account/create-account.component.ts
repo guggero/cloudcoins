@@ -3,10 +3,9 @@ import * as speakeasy from 'speakeasy';
 import * as QRCode from 'qrcode';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { matchOtherValidator, matchValueValidator } from '../../ui-components/functions';
+import { createErrorHandler, matchOtherValidator, matchValueValidator } from '../../ui-components/functions';
 import { BackendService } from '../../services/backend.service';
 import { CryptoService } from '../../services/crypto.service';
-import { EMAIL_REG_EXP } from '../../ui-components/globals';
 
 @Component({
   selector: 'create-account',
@@ -19,12 +18,12 @@ export class CreateAccountComponent {
   public accountForm: FormGroup;
   public secret: any;
   public qrCode: string;
-  public showSuccessMessage: boolean = false;
-  public errorMessage: any = null;
+  public notificationKey: string = null;
+  public isSuccess: boolean = false;
 
   constructor(private backendService: BackendService, private cryptoService: CryptoService, private formBuilder: FormBuilder) {
     this.accountForm = formBuilder.group({
-      email: ['', [Validators.required, Validators.pattern(EMAIL_REG_EXP)]],
+      username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       passwordRepeat: ['', [Validators.required, matchOtherValidator('password')]],
       confirmation: [
@@ -39,25 +38,19 @@ export class CreateAccountComponent {
   }
 
   public createAccount(value) {
-    const account = this.cryptoService.createAccount(value.email, value.password, this.secret.base32);
+    const account = this.cryptoService.createAccount(value.username, value.password, this.secret.base32);
     this.backendService.createAccount(account.getPersistablePart(), value.otp)
-      .subscribe(() => this.onSuccess(), (err) => this.onError(err));
+      .subscribe(() => this.onSuccess(), createErrorHandler(this));
   }
 
   private onSuccess() {
-    this.errorMessage = null;
-    this.showSuccessMessage = true;
+    this.notificationKey = 'create-account.successful';
+    this.isSuccess = true;
     window.scrollTo(0, 0);
   }
 
-  private onError(err: any) {
-    this.showSuccessMessage = false;
-    this.errorMessage = err;
-    window.scrollTo(0, 0);
-  }
-
-  get email() {
-    return this.accountForm.get('email');
+  get username() {
+    return this.accountForm.get('username');
   }
 
   get password() {

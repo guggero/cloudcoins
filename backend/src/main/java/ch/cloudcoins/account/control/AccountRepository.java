@@ -5,7 +5,7 @@ import ch.cloudcoins.account.entity.Account;
 
 public class AccountRepository extends BaseRepository<Account> {
 
-    public Account findByEmail(String email) {
-        return singleResult(createNamedQuery("Account.findByEmail").setParameter("email", email));
+    public Account findByUsername(String username) {
+        return singleResult(createNamedQuery("Account.findByUsername").setParameter("username", username));
     }
 }

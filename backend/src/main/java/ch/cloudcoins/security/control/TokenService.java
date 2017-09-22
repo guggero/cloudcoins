@@ -23,7 +23,6 @@ import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 public class TokenService {
 
     private static final int TOKEN_LENGTH = 32;
-    private static final String TOKEN_CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789";
     private static final Logger LOG = LoggerFactory.getLogger(TokenService.class);
 
     @Inject
@@ -38,7 +37,7 @@ public class TokenService {
     }
 
     public Token createToken(Account account) {
-        Token token = new Token(generateRandomString(TOKEN_LENGTH), account);
+        Token token = new Token(generateRandomHexString(TOKEN_LENGTH), account);
         repository.persist(token);
         LOG.debug("Created new {} for {}", token, account);
         return token;
@@ -108,11 +107,12 @@ public class TokenService {
         });
     }
 
-    public String generateRandomString(int length) {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            s.append(TOKEN_CHARACTERS.charAt(random.nextInt(TOKEN_CHARACTERS.length())));
+    public String generateRandomHexString(int length) {
+        StringBuilder sb = new StringBuilder();
+        while(sb.length() < length){
+            sb.append(Integer.toHexString(random.nextInt()));
         }
-        return s.toString();
+
+        return sb.toString().substring(0, length);
     }
 }

@@ -218,7 +218,6 @@ module.exports = function (options) {
         '$': 'jquery',
         jquery: 'jquery',
         Tether: 'tether',
-        Popper: 'popper.js',
         crypto: 'crypto-browserify',
       }),
 

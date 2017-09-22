@@ -8,7 +8,7 @@ public enum MessageKey {
     ERROR_INVALID_ACCESS("ch.cloudcoins.errors.invalidAccess"),
     ERROR_CONCURRENT_UPDATE("ch.cloudcoins.errors.concurrentUpdateOccured"),
     ERROR_INTERNAL_SERVER_ERROR("ch.cloudcoins.errors.internalServerError"),
-    ERROR_EMAIL_EXISTS("ch.cloudcoins.errors.emailExists");
+    ERROR_USERNAME_EXISTS("ch.cloudcoins.errors.usernameExists");
 
     private final String key;
 

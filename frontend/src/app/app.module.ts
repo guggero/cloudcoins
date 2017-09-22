@@ -8,6 +8,7 @@ import { PreloadAllModules, RouterModule } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgPipesModule } from 'ngx-pipes';
+import { ReCaptchaModule } from 'angular2-recaptcha';
 // general app configuration
 import { ENV_PROVIDERS } from './environment';
 import { ROUTES } from './app.routes';
@@ -32,6 +33,7 @@ import { BackendService } from './services/backend.service';
 import { CryptoService } from './services/crypto.service';
 import { SessionService } from './services/session.service';
 import { MyKeychainsComponent } from './pages/my-keychains/my-keychains.component';
+import { ImportKeychainsComponent } from './pages/import-keychains/import-keychains.component';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -58,6 +60,7 @@ export function createTranslateLoader(http: Http) {
     CreateAccountComponent,
     LoginComponent,
     LogoutComponent,
+    ImportKeychainsComponent,
     MyKeychainsComponent,
     OverviewComponent,
   ],
@@ -75,6 +78,7 @@ export function createTranslateLoader(http: Http) {
       }
     }),
     NgPipesModule,
+    ReCaptchaModule,
     UiComponentsModule
   ],
   providers: [

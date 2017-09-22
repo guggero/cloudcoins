@@ -122,4 +122,34 @@
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="keychain"/>
     </changeSet>
+
+    <changeSet id="0.0.2-model-1" author="guggero">
+        <comment>rename email to username</comment>
+
+        <dropUniqueConstraint tableName="account" constraintName="account_email_uk"/>
+        <renameColumn tableName="account" oldColumnName="email" newColumnName="username"/>
+        <addUniqueConstraint tableName="account" columnNames="username" constraintName="account_username_uk"/>
+    </changeSet>
+
+    <changeSet id="0.0.2-model-2" author="guggero">
+        <comment>add contact message entity</comment>
+
+        <createSequence sequenceName="contactmessage_seq"/>
+
+        <createTable tableName="contactmessage">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="varchar(4096)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="contactmessage" columnNames="id" constraintName="contactmessage_pk"/>
+    </changeSet>
 </databaseChangeLog>

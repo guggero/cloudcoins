@@ -49,3 +49,20 @@ export function matchValueValidator(value: string) {
     return null;
   };
 }
+
+export function createErrorHandler(component: any, scrollUp = true): (error: any) => void {
+  return (err: any): void => {
+    if (!err) {
+      return;
+    }
+
+    let errors = err.errors;
+    if (errors && errors.length) {
+      component.notificationKey = errors[0].messageKey;
+    }
+    component.isSuccess = false;
+    if (scrollUp) {
+      window.scrollTo(0, 0);
+    }
+  };
+}

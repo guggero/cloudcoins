@@ -7,12 +7,12 @@ import java.util.Objects;
 public final class LoginContext {
 
     private final Account account;
-    private final String email;
+    private final String username;
     private final String token;
 
-    public LoginContext(Account account, String email, String token) {
+    public LoginContext(Account account, String username, String token) {
         this.account = account;
-        this.email = email;
+        this.username = username;
         this.token = token;
     }
 
@@ -20,8 +20,8 @@ public final class LoginContext {
         return account;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
     public String getToken() {
@@ -38,20 +38,20 @@ public final class LoginContext {
         }
         LoginContext that = (LoginContext) o;
         return Objects.equals(account, that.account) &&
-                Objects.equals(email, that.email) &&
+                Objects.equals(username, that.username) &&
                 Objects.equals(token, that.token);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(account, email, token);
+        return Objects.hash(account, username, token);
     }
 
     @Override
     public String toString() {
         return "LoginContext{" +
                 "account=" + account +
-                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
                 ", token='" + token + '\'' +
                 '}';
     }

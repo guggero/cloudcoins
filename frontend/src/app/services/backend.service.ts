@@ -15,6 +15,13 @@ export class BackendService {
   constructor(private http: Http, private sessionService: SessionService) {
   }
 
+  public createMessage(captcha: any, message: any): Observable<any> {
+    return this.http
+      .post(`${API_URL}/contact?captcha=${encodeURIComponent(captcha)}`, message, this.buildRequestOptions())
+      .map((res: Response) => res.status)
+      .catch(this.handleError);
+  }
+
   public createAccount(account: any, otp: number): Observable<any> {
     return this.http
       .post(`${API_URL}/accounts?otp=${otp}`, account, this.buildRequestOptions())
@@ -22,9 +29,9 @@ export class BackendService {
       .catch(this.handleError);
   }
 
-  public getSalt(email: string, otp: number): Observable<string> {
+  public getSalt(username: string, otp: number): Observable<string> {
     return this.http
-      .get(`${API_URL}/accounts/salt?email=${encodeURIComponent(email)}&otp=${otp}`)
+      .get(`${API_URL}/accounts/salt?username=${encodeURIComponent(username)}&otp=${otp}`)
       .map((response) => response.json().salt)
       .catch(this.handleError);
   }
@@ -65,7 +72,7 @@ export class BackendService {
   }
 
   private handleError(error: any) {
-    return Observable.throw(error.json().errors);
+    return Observable.throw(error.json());
   }
 
   private buildRequestOptions(): RequestOptions {

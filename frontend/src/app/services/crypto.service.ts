@@ -2,7 +2,7 @@ import * as randomBytes from 'randombytes';
 import { crypto, HDNode, networks } from 'bitcoinjs-lib';
 import { Injectable } from '@angular/core';
 import { pbkdf2Sync } from 'pbkdf2';
-import { AES, enc } from 'crypto-js';
+import { AES, enc, HmacSHA512 } from 'crypto-js';
 import { generateMnemonic, mnemonicToSeed } from 'bip39';
 
 export const PBKDF2_HMAC_LEN = 64;
@@ -39,8 +39,12 @@ export function parseNode(base58: string): any {
   return HDNode.fromBase58(base58, networks.bitcoin);
 }
 
+export function hmacSha512(sha512: string): any {
+  return HmacSHA512('Seed version', sha512);
+}
+
 export class Account {
-  constructor(public email: string,
+  constructor(public username: string,
               public salt: string,
               public backendIdentification: string,
               public otpAuthKey?: string) {
@@ -48,7 +52,7 @@ export class Account {
 
   public getPersistablePart(): any {
     return {
-      email: this.email,
+      username: this.username,
       salt: this.salt,
       password: this.backendIdentification,
       otpAuthKey: this.otpAuthKey,
@@ -80,18 +84,18 @@ export interface Keychain {
 @Injectable()
 export class CryptoService {
 
-  public createAccount(email: string, password: string, otpAuthKey: string): Account {
+  public createAccount(username: string, password: string, otpAuthKey: string): Account {
     const salt = createSalt(16);
     const saltStr = salt.toString('hex');
     const pwHash1 = sha256String(saltStr + password);
     const pwHash2 = sha256String(saltStr + pwHash1.toString('hex'));
-    return new Account(email, saltStr, pwHash2.toString('hex'), otpAuthKey);
+    return new Account(username, saltStr, pwHash2.toString('hex'), otpAuthKey);
   }
 
-  public getLoginData(email: string, password: string, salt: string): Account {
+  public getLoginData(username: string, password: string, salt: string): Account {
     const pwHash1 = sha256String(salt + password);
     const pwHash2 = sha256String(salt + pwHash1.toString('hex'));
-    return new Account(email, salt, pwHash2.toString('hex'));
+    return new Account(username, salt, pwHash2.toString('hex'));
   }
 
   public decrypt(key: string, encrypted: string): string {

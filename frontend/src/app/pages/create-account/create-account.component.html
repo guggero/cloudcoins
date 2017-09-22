@@ -1,27 +1,24 @@
 <section>
   <h2 class="section-heading">Create account</h2>
 
-  <div class="alert alert-success" role="alert" *ngIf="showSuccessMessage">
-    <strong>Success!</strong> Your account has been created. You can <a routerLink="/login">now log in</a>.
-  </div>
+  <notification [notificationKey]="notificationKey" [isSuccess]="isSuccess"></notification>
 
-  <div class="alert alert-danger" role="alert" *ngIf="errorMessage !== null">
-    <strong>Error!</strong> Something went wrong: {{errorMessage | json}}
-  </div>
-
-  <form name="accountForm" [formGroup]="accountForm" *ngIf="errorMessage === null && !showSuccessMessage">
+  <form name="accountForm"
+        [formGroup]="accountForm"
+        (keyup.enter)="createAccount(accountForm.value)"
+        *ngIf="!isSuccess">
 
     <div class="form-group col-lg-8">
-      <label for="email" class="col-form-label">Email address</label>
-      <input type="email"
-             name="email"
+      <label for="username" class="col-form-label">Username</label>
+      <input type="text"
+             name="username"
              class="form-control"
-             formControlName="email"
-             [ngClass]="{'is-invalid': (email.dirty || email.touched) && email.invalid}"
-             id="email">
+             formControlName="username"
+             [ngClass]="{'is-invalid': (username.dirty || username.touched) && username.invalid}"
+             id="username">
       <div class="form-control-feedback invalid"
-           *ngIf="(email.dirty || email.touched) && email.invalid">
-        A valid email address is required.
+           *ngIf="(username.dirty || username.touched) && username.invalid">
+        The username needs to be at least 3 characters long.
       </div>
       <small class="form-text text-muted">This will be your username for logging in</small>
     </div>
@@ -98,7 +95,7 @@
     </div>
   </form>
 
-  <div class="col-lg-8" *ngIf="errorMessage === null && !showSuccessMessage">
+  <div class="col-lg-8" *ngIf="!isSuccess">
     <div class="float-right">
       <button type="button"
               class="btn btn-primary"
