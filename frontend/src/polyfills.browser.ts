@@ -19,14 +19,22 @@ import 'core-js/es6/weak-map';
 import 'core-js/es6/weak-set';
 import 'core-js/es6/typed';
 import 'core-js/es6/reflect';
+import 'core-js/es7/reflect';
+import 'zone.js/dist/zone';
 // see issue https://github.com/AngularClass/angular2-webpack-starter/issues/709
 // import 'core-js/es6/promise';
 
-import 'core-js/es7/reflect';
-import 'zone.js/dist/zone';
+let win = <any> window;
 
 // tslint:disable-next-line
-(<any>window).Popper = require('popper.js').default;
+win.jQuery = require('jquery');
+win.$ = win.jQuery;
+
+// tslint:disable-next-line
+win.Popper = require('popper.js').default;
+
+// tslint:disable-next-line
+require('bootstrap');
 
 if ('production' === ENV) {
   // Production

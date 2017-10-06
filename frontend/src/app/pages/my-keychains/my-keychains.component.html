@@ -1,106 +1,94 @@
 <section>
-  <h2 class="section-heading">My Keychains</h2>
+  <h2 class="section-heading">
+    My Keychains <span (click)="helpShown = !helpShown" class="ml-1 fa fa-info-circle"></span>
+  </h2>
 
-  <div class="row">
-    <table class="col-6">
+  <div class="card bg-light mb-4 page-help" *ngIf="helpShown">
+    <div class="card-header"><span class="fa fa-info-circle mr-1"></span> Help / Info</div>
+    <div class="card-body">
+      <p class="card-title">
+        A keychain is a set of crypto currency key pairs (private and public keys) that are deterministically calculated
+        from a master key (also called the BIP32 master extended key). You can have multiple master keys if you want but
+        that is not necessary since you can generate many, many key pairs from one single master key.<br/>
+        But if you have a wallet software on your smartphone you might want to import it to Cloudcoins to keep a
+        backup.<br/>
+        Use the "Add keychain" button to import or generate a master key.
+      </p>
+    </div>
+  </div>
+
+  <div class="row align-items-end mb-4">
+
+    <form class="col-6">
+      <div class="form-group" *ngIf="keychains && keychains.length > 0">
+        <label for="chain">Select keychain</label>
+        <select id="chain"
+                name="chain"
+                class="form-control"
+                [(ngModel)]="selectedChain"
+                (change)="selectPosition(selectedChain.positions[0])">
+          <option *ngFor="let chain of keychains" [ngValue]="chain">{{chain.name}}</option>
+        </select>
+      </div>
+
+      <div class="form-group" *ngIf="keychains && keychains.length === 0">
+        <span>You don't have any keychains yet.</span>
+      </div>
+    </form>
+
+    <div class="col-6">
+      <div class="form-group">
+        <a routerLink="/add-keychain" class="btn btn-primary" role="button">Add keychain</a>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedChain !== null">
+    <h4>Addresses for keychain {{selectedChain.name}}</h4>
+    <nav class="navbar navbar-expand-md navbar-light bg-light position-selection mb-4">
+      <span class="navbar-text" *ngIf="!selectedChain.positions || selectedChain.positions.length === 0">
+          No coin/crypto currency added yet
+      </span>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item" *ngFor="let position of selectedChain.positions">
+            <a class="nav-link"
+               (click)="selectPosition(position)"
+               [class.active]="selectedPosition === position">
+              {{position.network.label}}
+            </a>
+          </li>
+        </ul>
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown">
+            Add coin/crypto currency
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" *ngFor="let network of getSelectableNetworks()" (click)="newCoin(network)">
+              {{network.label}}
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <table class="table mb-4" *ngIf="selectedPosition">
       <thead>
       <tr>
-        <th>Name</th>
-        <th>BIP32 master key</th>
+        <th>Address</th>
+        <th>Balance</th>
+        <th>Private Key</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let keychain of keychains; let idx = index;" [class.active]="idx === selectedChain">
-        <td>{{keychain.name}}</td>
-        <td>
-          <a (click)="selectedChain = idx">{{keychain.decryptedKey.toBase58().substring(0, 32)}}...</a><br/>
-        </td>
-      </tr>
-      <tr *ngIf="!keychains || keychains.length === 0">
-        <td colspan="2"><em>You don't have any keychains yet.</em></td>
+      <tr *ngFor="let pair of selectedPosition.keyPairs">
+        <td>{{pair.getAddress()}}</td>
+        <td>n/a</td>
+        <td>{{pair.toWIF()}}</td>
       </tr>
       </tbody>
     </table>
 
-    <div *ngIf="selectedChain !== null" class="col-6">
-      <h4>Addresses for keychain {{keychains[selectedChain].name}}</h4>
-
-      <!--
-      <ul class="nav nav-tabs">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle"
-             data-toggle="dropdown">
-            {{coins[selectedCoin].label}}
-          </a>
-          <div class="dropdown-menu">
-            <a class="dropdown-item"
-               *ngFor="let coin of coins; let idx = index;"
-               (click)="selectedCoin = idx">
-              {{coin.label}}
-            </a>
-          </div>
-        </li>
-      </ul>
-      -->
-
-      <div *ngIf="keychains[selectedChain].positions && keychains[selectedChain].positions.length > 0">
-        <div *ngFor="let pair of keychains[selectedChain].positions[0].keyPairs">
-          Private key: <var>{{pair.privKeyWif}}</var><br/>
-          Address: <var>{{pair.address}}</var><br/>
-          <hr/>
-        </div>
-      </div>
-      <div *ngIf="!keychains[selectedChain].positions || !keychains[selectedChain].positions.length">
-        <span>No keys yet</span>
-      </div>
-      <button type="button" class="btn" (click)="newKey(keychains[selectedChain])">New key</button>
-    </div>
-  </div>
-</section>
-
-<section>
-  <h3>Add new keychain</h3>
-
-  <form name="keychainForm" [formGroup]="keychainForm">
-
-    <div class="form-group col-lg-8">
-      <label for="name" class="col-form-label">Name</label>
-      <input type="text"
-             name="name"
-             class="form-control"
-             formControlName="name"
-             [ngClass]="{'is-invalid': (name.dirty || name.touched) && name.invalid}"
-             id="name">
-      <div class="form-control-feedback invalid"
-           *ngIf="(name.dirty || name.touched) && name.invalid">
-        Please enter a name.
-      </div>
-    </div>
-
-    <div class="form-group col-lg-8">
-      <label for="masterKey">Password</label>
-      <input type="text"
-             name="masterKey"
-             class="form-control"
-             formControlName="masterKey"
-             [ngClass]="{'is-invalid': (masterKey.dirty || masterKey.touched) && masterKey.invalid}"
-             id="masterKey">
-      <div class="form-control-feedback invalid"
-           *ngIf="(masterKey.dirty || masterKey.touched) && masterKey.invalid">
-        Please enter a valid BIP32 bitcoin master key (starts with xprv)
-      </div>
-      <small class="form-text text-muted">This is a generated random key. You can also paste your own key here.</small>
-    </div>
-  </form>
-
-  <div class="col-lg-8">
-    <div class="float-right">
-      <button type="button"
-              class="btn btn-primary"
-              (click)="save(keychainForm.value)"
-              [disabled]="keychainForm.invalid">
-        Create keychain
-      </button>
-    </div>
+    <button class="btn" *ngIf="selectedNetwork" (click)="newKey(selectedChain)">New key</button>
   </div>
 </section>

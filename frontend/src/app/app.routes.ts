@@ -4,7 +4,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { CreateAccountComponent } from './pages/create-account/create-account.component';
 import { LogoutComponent } from './pages/logout/logout.component';
 import { MyKeychainsComponent } from './pages/my-keychains/my-keychains.component';
-import { ImportKeychainsComponent } from './pages/import-keychains/import-keychains.component';
+import { AddKeychainComponent } from './pages/add-keychain/add-keychain.component';
 
 export const ROUTES: Routes = [
   {path: '', redirectTo: 'overview', pathMatch: 'full'},
@@ -12,7 +12,7 @@ export const ROUTES: Routes = [
   {path: 'create-account', component: CreateAccountComponent, data: {pageKey: 'create-account'}},
   {path: 'login', component: LoginComponent, data: {pageKey: 'login'}},
   {path: 'logout', component: LogoutComponent, data: {pageKey: 'logout'}},
-  {path: 'import-keychains', component: ImportKeychainsComponent, data: {pageKey: 'import-keychains'}},
+  {path: 'add-keychain', component: AddKeychainComponent, data: {pageKey: 'add-keychain'}},
   {path: 'my-keychains', component: MyKeychainsComponent, data: {pageKey: 'my-keychains'}},
   {path: 'overview', component: OverviewComponent, data: {pageKey: 'overview'}},
 ];

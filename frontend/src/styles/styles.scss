@@ -34,3 +34,21 @@ div.container section {
 div.form-control-feedback.invalid {
   color: #dc3545;
 }
+
+h2 span.fa-info-circle {
+  cursor: pointer;
+  font-size: 0.5em;
+}
+
+nav.navbar.position-selection {
+  .navbar-text {
+    min-width: 350px;
+  }
+  .nav-item.dropdown, a {
+    cursor: pointer;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+  }
+}

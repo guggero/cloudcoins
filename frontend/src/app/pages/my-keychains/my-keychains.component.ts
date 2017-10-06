@@ -1,17 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../../services/backend.service';
 import { SessionService } from '../../services/session.service';
-import {
-  CryptoService,
-  generateDeterministicNode,
-  Keychain,
-  KeyPosition,
-  parseNode
-} from '../../services/crypto.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NETWORKS } from '../../networks';
-
-export const COIN_TYPE_BITCOIN = 0;
+import { CryptoService, Keychain, KeyPosition, parseNode } from '../../services/crypto.service';
+import { Network, NETWORKS } from '../../networks';
+import _ from 'lodash';
 
 @Component({
   selector: 'my-keychains',
@@ -21,20 +13,14 @@ export const COIN_TYPE_BITCOIN = 0;
 })
 export class MyKeychainsComponent implements OnInit {
 
+  public helpShown: boolean = false;
   public keychains: Keychain[];
-  public selectedChain: number = null;
-  public keychainForm: FormGroup;
-
-  public coins: any[] = NETWORKS;
-  public selectedCoin: number = 0;
+  public selectedChain: Keychain = null;
+  public selectedNetwork: Network = null;
+  public selectedPosition: KeyPosition = null;
 
   constructor(public cryptoService: CryptoService, public sessionService: SessionService,
-              private backendService: BackendService, private formBuilder: FormBuilder) {
-    const generatedKey = generateDeterministicNode();
-    this.keychainForm = formBuilder.group({
-      name: ['', [Validators.required]],
-      masterKey: [generatedKey, [Validators.required, Validators.minLength(8)]]
-    });
+              private backendService: BackendService) {
   }
 
   public ngOnInit(): void {
@@ -43,54 +29,63 @@ export class MyKeychainsComponent implements OnInit {
         this.keychains = keychains;
         this.keychains.forEach((keychain) => {
           keychain.decryptedKey = parseNode(this.cryptoService.decrypt(this.sessionService.getKey(), keychain.key));
-          keychain.positions.forEach((position) => this.calculateKeys(keychain, position));
+          keychain.positions.forEach((position) =>
+            position.network = NETWORKS.find((n) => n.config.bip44 === position.coinType));
         });
         if (this.keychains.length > 0 && this.selectedChain === null) {
-          this.selectedChain = 0;
+          this.selectedChain = keychains[0];
+          if (this.selectedChain.positions && this.selectedChain.positions.length > 0) {
+            this.selectPosition(this.selectedChain.positions[0]);
+          }
         }
       });
   }
 
+  public newCoin(network: Network): void {
+    this.selectedNetwork = network;
+    this.newKey(this.selectedChain);
+  }
+
   public newKey(keychain: Keychain): void {
-    this.backendService.increasePosition(keychain, COIN_TYPE_BITCOIN)
+    this.backendService.increasePosition(keychain, this.selectedNetwork.config.bip44)
       .subscribe((position) => {
-        this.calculateKeys(keychain, position);
-        keychain.positions = [position];
+        position.network = NETWORKS.find((n) => n.config.bip44 === position.coinType);
+        const existingIndex = _.findIndex(keychain.positions, (pos) => pos.coinType === position.coinType);
+        if (existingIndex >= 0) {
+          keychain.positions[existingIndex] = position;
+        } else {
+          keychain.positions.push(position);
+        }
+        this.selectPosition(position);
       });
   }
 
-  public save(value): void {
-    const keychain: Keychain = {
-      name: value.name,
-      key: this.cryptoService.encrypt(this.sessionService.getKey(), value.masterKey),
-      positions: []
-    };
-    this.backendService.createKeychain(keychain).subscribe(() => this.ngOnInit());
+  public getSelectableNetworks(): Network[] {
+    return NETWORKS.filter((n) =>
+      !_.find(this.selectedChain.positions, (pos) =>
+        pos.network.config.bip44 === n.config.bip44));
+  }
+
+  public selectPosition(position: KeyPosition) {
+    if (position) {
+      this.calculateKeys(this.selectedChain, position);
+      this.selectedPosition = position;
+      this.selectedNetwork = this.selectedPosition.network;
+    } else {
+      this.selectedPosition = null;
+    }
   }
 
   private calculateKeys(keychain: Keychain, position: KeyPosition): void {
     position.keyPairs = [];
     for (let i = 0; i <= position.index; i++) {
-      position.keyPairs.push({
-        privKeyWif: this.privateKey(keychain, position, i),
-        address: this.address(keychain, position, i),
-      });
+      position.keyPairs.push(this.keyPair(keychain, position, i));
     }
   }
 
-  private privateKey(keychain: Keychain, position: KeyPosition, index: number): string {
-    return keychain.decryptedKey.derivePath(`m/44'/${position.coinType}'/0'/0/${index}`).keyPair.toWIF();
-  }
-
-  private address(keychain: Keychain, position: KeyPosition, index: number): string {
-    return keychain.decryptedKey.derivePath(`m/44'/${position.coinType}'/0'/0/${index}`).keyPair.getAddress();
-  }
-
-  get name() {
-    return this.keychainForm.get('name');
-  }
-
-  get masterKey() {
-    return this.keychainForm.get('masterKey');
+  private keyPair(keychain: Keychain, position: KeyPosition, index: number): string {
+    const keyPair = keychain.decryptedKey.derivePath(`m/44'/${position.coinType}'/0'/0/${index}`).keyPair;
+    keyPair.network = position.network.config;
+    return keyPair;
   }
 }

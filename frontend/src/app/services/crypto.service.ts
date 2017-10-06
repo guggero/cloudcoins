@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { pbkdf2Sync } from 'pbkdf2';
 import { AES, enc, HmacSHA512 } from 'crypto-js';
 import { generateMnemonic, mnemonicToSeed } from 'bip39';
+import { Network } from '../networks';
 
 export const PBKDF2_HMAC_LEN = 64;
 export const PBKDF2_ROUNDS = 10240;
@@ -60,16 +61,12 @@ export class Account {
   }
 }
 
-export interface KeyPair {
-  privKeyWif: string;
-  address: string;
-}
-
 export interface KeyPosition {
   id: number;
   coinType: number;
   index: number;
-  keyPairs?: KeyPair[];
+  keyPairs?: any[];
+  network?: Network;
 }
 
 export interface Keychain {
