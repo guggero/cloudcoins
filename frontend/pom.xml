@@ -110,7 +110,7 @@
                         </goals>
                         <configuration>
                             <nodeVersion>v6.11.2</nodeVersion>
-                            <yarnVersion>v0.27.5</yarnVersion>
+                            <yarnVersion>v1.0.1</yarnVersion>
                         </configuration>
                     </execution>
 
