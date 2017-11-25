@@ -14,7 +14,7 @@
       <option name="SERVER" />
       <option name="BINDING_SET_NAME" value="" />
       <option name="DOMAIN" value="false" />
-      <option name="SERVER_GROUP" value="main-server-group" />
+      <option name="SERVER_GROUP" />
       <option name="USERNAME" value="" />
       <option name="PASSWORD" value="" />
     </server-settings>

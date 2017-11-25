@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../../services/backend.service';
 import { SessionService } from '../../services/session.service';
 import { CryptoService, Keychain, KeyPosition, parseNode } from '../../services/crypto.service';
-import { Network, NETWORKS } from '../../networks';
+import { customGetAddress, customToWIF, Network, NETWORKS } from '../../networks';
 import _ from 'lodash';
 
 @Component({
@@ -61,9 +61,8 @@ export class MyKeychainsComponent implements OnInit {
   }
 
   public getSelectableNetworks(): Network[] {
-    return NETWORKS.filter((n) =>
-      !_.find(this.selectedChain.positions, (pos) =>
-        pos.network.config.bip44 === n.config.bip44));
+    const sortedNetworks = _.sortBy(NETWORKS, 'label');
+    return sortedNetworks.filter((n) => !_.find(this.selectedChain.positions, (pos) => pos.network.config.bip44 === n.config.bip44));
   }
 
   public selectPosition(position: KeyPosition) {
@@ -86,6 +85,8 @@ export class MyKeychainsComponent implements OnInit {
   private keyPair(keychain: Keychain, position: KeyPosition, index: number): string {
     const keyPair = keychain.decryptedKey.derivePath(`m/44'/${position.coinType}'/0'/0/${index}`).keyPair;
     keyPair.network = position.network.config;
+    keyPair.wif = customToWIF(keyPair, keyPair.network);
+    keyPair.address = customGetAddress(keyPair, keyPair.network);
     return keyPair;
   }
 }

@@ -15,6 +15,7 @@
       <module name="cloudcoins-backend" target="1.8" />
       <module name="cloudcoins-docker" target="1.8" />
       <module name="cloudcoins-frontend" target="1.8" />
+      <module name="cloudcoins-parent" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
