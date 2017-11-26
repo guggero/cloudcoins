@@ -65,6 +65,7 @@ export interface KeyPosition {
   id: number;
   coinType: number;
   index: number;
+  custom: boolean;
   keyPairs?: any[];
   network?: Network;
 }

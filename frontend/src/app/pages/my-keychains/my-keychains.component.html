@@ -91,6 +91,35 @@
       </tbody>
     </table>
 
-    <button class="btn" *ngIf="selectedNetwork" (click)="newKey(selectedChain)">New key</button>
+    <button class="btn" *ngIf="selectedNetwork" (click)="newKey()">New key</button>
+    <button class="btn" *ngIf="selectedNetwork" (click)="openDialog(customKeyDialog)">Add key with custom index</button>
   </div>
+
+  <ng-template #customKeyDialog let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Add custom index</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('close')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form name="customIndexForm" [formGroup]="customIndexForm">
+        <label for="customIndex">Custom index</label>
+        <input type="number"
+               name="customIndex"
+               class="form-control"
+               formControlName="customIndex"
+               [ngClass]="{'is-invalid': (customIndex.dirty || customIndex.touched) && customIndex.invalid}"
+               id="customIndex">
+        <div class="form-control-feedback invalid"
+             *ngIf="(customIndex.dirty || customIndex.touched) && customIndex.invalid">
+          Please enter a valid BIP44 index (max 2,147,483,646)
+        </div>
+        <small class="form-text text-muted">The custom key will be saved separately to the database.</small>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn" (click)="c('ok')">Ok</button>
+    </div>
+  </ng-template>
 </section>

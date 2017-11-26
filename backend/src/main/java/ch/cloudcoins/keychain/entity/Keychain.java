@@ -7,9 +7,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -39,7 +37,7 @@ public class Keychain {
 
     @OneToMany(mappedBy = "keychain", cascade = ALL, orphanRemoval = true, fetch = EAGER)
     @JsonManagedReference("keychain-keyposition")
-    private Set<KeyPosition> positions = new HashSet<>();
+    private List<KeyPosition> positions = new ArrayList<>();
 
     public Keychain() {
         this.createdAt = LocalDateTime.now();
@@ -85,11 +83,11 @@ public class Keychain {
         this.account = account;
     }
 
-    public Set<KeyPosition> getPositions() {
+    public List<KeyPosition> getPositions() {
         return positions;
     }
 
-    public void setPositions(Set<KeyPosition> positions) {
+    public void setPositions(List<KeyPosition> positions) {
         this.positions = positions;
     }
 

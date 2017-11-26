@@ -152,4 +152,16 @@
         </createTable>
         <addPrimaryKey tableName="contactmessage" columnNames="id" constraintName="contactmessage_pk"/>
     </changeSet>
+
+    <changeSet id="0.0.2-model-3" author="guggero">
+        <comment>add field isCustom to KeyPosition entity</comment>
+
+        <addColumn tableName="keyposition">
+            <column name="iscustom" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <dropUniqueConstraint tableName="keyposition" constraintName="keyposition_keychain_cointype_uk"/>
+    </changeSet>
 </databaseChangeLog>

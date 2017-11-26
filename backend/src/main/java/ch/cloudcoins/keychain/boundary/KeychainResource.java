@@ -70,4 +70,31 @@ public class KeychainResource {
         KeyPosition position = keyPositionRepository.increaseKeyPosition(keychain, coinType);
         return ok(position);
     }
+
+    @POST
+    @Path("/{keychainId}/positions/{coinType}/custom")
+    public Response addCustomPosition(@PathParam("keychainId") Long keychainId,
+                                      @PathParam("coinType") Integer coinType,
+                                      @QueryParam("index") Integer index) {
+        LoginContext context = LoginContextHolder.get();
+
+        if (keychainId == null || coinType == null || index == null) {
+            return businessError(ERROR_INVALID_INPUT);
+        }
+
+        Keychain keychain = repository.find(keychainId);
+        if (keychain == null) {
+            return entityNotFound();
+        } else if (!Objects.equals(keychain.getAccount().getId(), context.getAccount().getId())) {
+            return businessError(ERROR_INVALID_ACCESS);
+        }
+
+        KeyPosition position = new KeyPosition();
+        position.setKeychain(keychain);
+        position.setCoinType(coinType);
+        position.setIndex(index);
+        position.setCustom(true);
+        keyPositionRepository.persist(position);
+        return ok(position);
+    }
 }

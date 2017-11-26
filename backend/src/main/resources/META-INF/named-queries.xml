@@ -13,7 +13,7 @@
     </named-query>
 
     <named-query name="KeyPosition.findByKeychainAndCoinType">
-        <query>select p from KeyPosition p where p.keychain.id = :keychainId and p.coinType = :coinType</query>
+        <query>select p from KeyPosition p where p.keychain.id = :keychainId and p.coinType = :coinType and p.isCustom = false</query>
     </named-query>
 
     <named-query name="Token.findByTokenString">

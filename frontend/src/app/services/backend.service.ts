@@ -71,6 +71,13 @@ export class BackendService {
       .catch(this.handleError);
   }
 
+  public addCustomPosition(keychain: Keychain, coinType: number, index: number): Observable<KeyPosition> {
+    return this.http
+      .post(`${API_URL}/keychains/${keychain.id}/positions/${coinType}/custom?index=${index}`, null, this.buildRequestOptions())
+      .map((response) => response.json())
+      .catch(this.handleError);
+  }
+
   private handleError(error: any) {
     return Observable.throw(error.json());
   }

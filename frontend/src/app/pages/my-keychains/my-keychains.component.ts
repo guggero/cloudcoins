@@ -4,6 +4,9 @@ import { SessionService } from '../../services/session.service';
 import { CryptoService, Keychain, KeyPosition, parseNode } from '../../services/crypto.service';
 import { customGetAddress, customToWIF, Network, NETWORKS } from '../../networks';
 import _ from 'lodash';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { noop } from 'rxjs/util/noop';
 
 @Component({
   selector: 'my-keychains',
@@ -18,9 +21,14 @@ export class MyKeychainsComponent implements OnInit {
   public selectedChain: Keychain = null;
   public selectedNetwork: Network = null;
   public selectedPosition: KeyPosition = null;
+  public customIndexForm: FormGroup;
 
   constructor(public cryptoService: CryptoService, public sessionService: SessionService,
-              private backendService: BackendService) {
+              private backendService: BackendService, private formBuilder: FormBuilder,
+              private modalService: NgbModal) {
+    this.customIndexForm = formBuilder.group({
+      customIndex: [0, [Validators.required, Validators.max(2147483646)]]
+    });
   }
 
   public ngOnInit(): void {
@@ -41,12 +49,29 @@ export class MyKeychainsComponent implements OnInit {
       });
   }
 
-  public newCoin(network: Network): void {
-    this.selectedNetwork = network;
-    this.newKey(this.selectedChain);
+  public openDialog(dialogContent): void {
+    this.customIndexForm.get('customIndex').setValue(0);
+    const keychain = this.selectedChain;
+    this.modalService.open(dialogContent).result.then(() => {
+      this.backendService.addCustomPosition(keychain, this.selectedNetwork.config.bip44, this.customIndex.value)
+        .subscribe((position) => {
+          keychain.positions.push(position);
+          this.selectPosition(position);
+        });
+    }, noop);
   }
 
-  public newKey(keychain: Keychain): void {
+  get customIndex() {
+    return this.customIndexForm.get('customIndex');
+  }
+
+  public newCoin(network: Network): void {
+    this.selectedNetwork = network;
+    this.newKey();
+  }
+
+  public newKey(): void {
+    const keychain = this.selectedChain;
     this.backendService.increasePosition(keychain, this.selectedNetwork.config.bip44)
       .subscribe((position) => {
         position.network = NETWORKS.find((n) => n.config.bip44 === position.coinType);
@@ -77,8 +102,12 @@ export class MyKeychainsComponent implements OnInit {
 
   private calculateKeys(keychain: Keychain, position: KeyPosition): void {
     position.keyPairs = [];
-    for (let i = 0; i <= position.index; i++) {
-      position.keyPairs.push(this.keyPair(keychain, position, i));
+    if (!position.custom) {
+      for (let i = 0; i <= position.index; i++) {
+        position.keyPairs.push(this.keyPair(keychain, position, i));
+      }
+    } else {
+      position.keyPairs.push(this.keyPair(keychain, position, position.index));
     }
   }
 

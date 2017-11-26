@@ -17,6 +17,7 @@ public class KeyPositionRepository extends BaseRepository<KeyPosition> {
             position.setKeychain(keychain);
             position.setCoinType(coinType);
             position.setIndex(0);
+            position.setCustom(false);
             persist(position);
             return position;
         } else {

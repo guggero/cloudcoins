@@ -26,6 +26,9 @@ public class KeyPosition {
     @NotNull
     private Integer index;
 
+    @NotNull
+    private boolean isCustom;
+
     public KeyPosition() {
     }
 
@@ -61,6 +64,14 @@ public class KeyPosition {
         this.index = index;
     }
 
+    public boolean isCustom() {
+        return isCustom;
+    }
+
+    public void setCustom(boolean custom) {
+        isCustom = custom;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -71,11 +82,12 @@ public class KeyPosition {
         }
         KeyPosition that = (KeyPosition) o;
         return Objects.equals(keychain, that.keychain) &&
-                Objects.equals(coinType, that.coinType);
+                Objects.equals(coinType, that.coinType) &&
+                Objects.equals(isCustom, that.isCustom);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(keychain, coinType);
+        return Objects.hash(keychain, coinType, isCustom);
     }
 }
