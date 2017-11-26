@@ -1,14 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Http, HttpModule } from '@angular/http';
-import { ApplicationRef, NgModule } from '@angular/core';
-import { createInputTransfer, createNewHosts, removeNgStyles } from '@angularclass/hmr';
+import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule } from '@angular/router';
 // third party angular modules
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgPipesModule } from 'ngx-pipes';
 import { ReCaptchaModule } from 'angular2-recaptcha';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // general app configuration
 import { ENV_PROVIDERS } from './environment';
 import { ROUTES } from './app.routes';
@@ -42,11 +42,6 @@ const APP_PROVIDERS = [
   SessionService,
 ];
 
-type StoreType = {
-  restoreInputValues: () => void,
-  disposeOldHosts: () => void
-};
-
 export function createTranslateLoader(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json?_=' + (new Date()).getTime());
 }
@@ -77,7 +72,8 @@ export function createTranslateLoader(http: Http) {
     }),
     NgPipesModule,
     ReCaptchaModule,
-    UiComponentsModule
+    UiComponentsModule,
+    NgbModule.forRoot()
   ],
   providers: [
     ENV_PROVIDERS,
@@ -85,38 +81,4 @@ export function createTranslateLoader(http: Http) {
   ]
 })
 export class AppModule {
-
-  constructor(public appRef: ApplicationRef) {
-  }
-
-  public hmrOnInit(store: StoreType) {
-    if (!store) {
-      return;
-    }
-    // set input values
-    if ('restoreInputValues' in store) {
-      let restoreInputValues = store.restoreInputValues;
-      setTimeout(restoreInputValues);
-    }
-
-    this.appRef.tick();
-    delete store.restoreInputValues;
-  }
-
-  public hmrOnDestroy(store: StoreType) {
-    const cmpLocation = this.appRef.components.map((cmp) => cmp.location.nativeElement);
-    // recreate root elements
-    store.disposeOldHosts = createNewHosts(cmpLocation);
-    // save input values
-    store.restoreInputValues = createInputTransfer();
-    // remove styles
-    removeNgStyles();
-  }
-
-  public hmrAfterDestroy(store: StoreType) {
-    // display new elements
-    store.disposeOldHosts();
-    delete store.disposeOldHosts;
-  }
-
 }
