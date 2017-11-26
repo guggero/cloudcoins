@@ -168,7 +168,7 @@ export const NETWORKS: Network[] = [{
     pubKeyHash: 41,
     scriptHash: 100,
     wif: 169,
-    bip44: 0xab
+    bip44: 0xac
   }
 }, {
   label: 'LTC (Litecoin Testnet)',

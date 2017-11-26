@@ -84,6 +84,7 @@ export class MyKeychainsComponent implements OnInit {
 
   private keyPair(keychain: Keychain, position: KeyPosition, index: number): string {
     const keyPair = keychain.decryptedKey.derivePath(`m/44'/${position.coinType}'/0'/0/${index}`).keyPair;
+    keyPair.index = index;
     keyPair.network = position.network.config;
     keyPair.wif = customToWIF(keyPair, keyPair.network);
     keyPair.address = customGetAddress(keyPair, keyPair.network);

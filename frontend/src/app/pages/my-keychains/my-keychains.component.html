@@ -75,6 +75,7 @@
     <table class="table mb-4" *ngIf="selectedPosition">
       <thead>
       <tr>
+        <th>#</th>
         <th>Address</th>
         <th>Balance</th>
         <th>Private Key</th>
@@ -82,9 +83,10 @@
       </thead>
       <tbody>
       <tr *ngFor="let pair of selectedPosition.keyPairs">
+        <td>{{pair.index}}</td>
         <td>{{pair.address}}</td>
         <td>n/a</td>
-        <td>{{pair.wif}}</td>
+        <td><a class="link" (click)="pair.showKey = !pair.showKey">{{pair.showKey ? pair.wif : 'Show'}}</a></td>
       </tr>
       </tbody>
     </table>
