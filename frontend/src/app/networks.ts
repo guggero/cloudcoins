@@ -161,6 +161,16 @@ export const NETWORKS: Network[] = [{
     bip44: 0xaa
   }
 }, {
+  label: 'HTML5 (HTMLCOIN)',
+  config: {
+    messagePrefix: 'unused',
+    bip32: {public: 0x1397c10d, private: 0x1397bcf3},
+    pubKeyHash: 41,
+    scriptHash: 100,
+    wif: 169,
+    bip44: 0xab
+  }
+}, {
   label: 'LTC (Litecoin Testnet)',
   config: {
     messagePrefix: '\u0019Litecoin Signed Message:\n',
