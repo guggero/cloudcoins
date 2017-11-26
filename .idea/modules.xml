@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/cloudcoins.iml" filepath="$PROJECT_DIR$/.idea/cloudcoins.iml" />
       <module fileurl="file://$PROJECT_DIR$/backend/cloudcoins-backend.iml" filepath="$PROJECT_DIR$/backend/cloudcoins-backend.iml" />
       <module fileurl="file://$PROJECT_DIR$/docker/cloudcoins-docker.iml" filepath="$PROJECT_DIR$/docker/cloudcoins-docker.iml" />
       <module fileurl="file://$PROJECT_DIR$/frontend/cloudcoins-frontend.iml" filepath="$PROJECT_DIR$/frontend/cloudcoins-frontend.iml" />
