@@ -32,10 +32,10 @@ export class LoginComponent {
     }
     const errFn = createErrorHandler(this);
     this.backendService.getSalt(value.username, value.otp)
-      .subscribe((salt) => {
-        const loginData = this.cryptoService.getLoginData(value.username, value.password, salt);
+      .subscribe((response) => {
+        const loginData = this.cryptoService.getLoginData(value.username, value.password, response.salt);
         this.backendService.login(loginData, value.otp)
-          .subscribe((token) => this.onSuccess(token, value.password, salt), errFn);
+          .subscribe((tokenResponse) => this.onSuccess(tokenResponse.token, value.password, response.salt), errFn);
       }, errFn);
   }
 

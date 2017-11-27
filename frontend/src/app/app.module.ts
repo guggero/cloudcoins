@@ -1,7 +1,7 @@
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Http, HttpModule } from '@angular/http';
-import { NgModule } from '@angular/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { PreloadAllModules, RouterModule } from '@angular/router';
 // third party angular modules
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -10,7 +10,7 @@ import { NgPipesModule } from 'ngx-pipes';
 import { ReCaptchaModule } from 'angular2-recaptcha';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // general app configuration
-import { ENV_PROVIDERS } from './environment';
+import { environment } from 'environments/environment';
 import { ROUTES } from './app.routes';
 // app components
 import { AppComponent } from './app.component';
@@ -42,7 +42,7 @@ const APP_PROVIDERS = [
   SessionService,
 ];
 
-export function createTranslateLoader(http: Http) {
+export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json?_=' + (new Date()).getTime());
 }
 
@@ -61,13 +61,13 @@ export function createTranslateLoader(http: Http) {
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpModule,
+    HttpClientModule,
     RouterModule.forRoot(ROUTES, {useHash: false, preloadingStrategy: PreloadAllModules}),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: (createTranslateLoader),
-        deps: [Http]
+        deps: [HttpClient]
       }
     }),
     NgPipesModule,
@@ -76,7 +76,7 @@ export function createTranslateLoader(http: Http) {
     NgbModule.forRoot()
   ],
   providers: [
-    ENV_PROVIDERS,
+    environment.ENV_PROVIDERS,
     APP_PROVIDERS
   ]
 })
