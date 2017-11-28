@@ -7,14 +7,11 @@
         content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 
   <meta name="robots" content="index, follow">
-
-  <!-- the following attributes will be dynamically updated by the appService -->
   <title><%= htmlWebpackPlugin.options.title %></title>
   <meta name="description" content="<%= htmlWebpackPlugin.options.title %>">
   <meta name="keywords" content="cloudcoins">
 
   <% if (webpackConfig.htmlElements.headTags) { %>
-  <!-- Configured Head Tags  -->
   <%= webpackConfig.htmlElements.headTags %>
   <% } %>
 
