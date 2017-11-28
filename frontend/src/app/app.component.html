@@ -28,18 +28,18 @@
           <a class="nav-link" routerLink="/overview">Home</a>
         </li>
         <!-- only when not logged in -->
-        <li class="nav-item" *ngIf="!sessionService.isLoggedIn()">
+        <li class="nav-item" [hidden]="sessionService.isLoggedIn()">
           <a class="nav-link" routerLink="/create-account">Create account</a>
         </li>
-        <li class="nav-item" *ngIf="!sessionService.isLoggedIn()">
+        <li class="nav-item" [hidden]="sessionService.isLoggedIn()">
           <a class="nav-link" routerLink="/login">Log in</a>
         </li>
 
         <!-- only when logged in -->
-        <li class="nav-item" *ngIf="sessionService.isLoggedIn()">
+        <li class="nav-item" [hidden]="!sessionService.isLoggedIn()">
           <a class="nav-link" routerLink="/my-keychains">My keychains</a>
         </li>
-        <li class="nav-item" *ngIf="sessionService.isLoggedIn()">
+        <li class="nav-item" [hidden]="!sessionService.isLoggedIn()">
           <a class="nav-link" routerLink="/logout">Log out</a>
         </li>
       </ul>

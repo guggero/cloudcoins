@@ -4,6 +4,7 @@ import { BackendService } from '../../services/backend.service';
 import { createEncryptionKey, CryptoService } from '../../services/crypto.service';
 import { SessionService } from '../../services/session.service';
 import { createErrorHandler } from '../../ui-components/functions';
+import 'rxjs/add/operator/finally';
 
 @Component({
   selector: 'login',
@@ -14,6 +15,7 @@ import { createErrorHandler } from '../../ui-components/functions';
 export class LoginComponent {
 
   public loginForm: FormGroup;
+  public buttonClicked: boolean = false;
   public notificationKey: string = null;
   public isSuccess: boolean = false;
 
@@ -30,16 +32,19 @@ export class LoginComponent {
     if (!this.loginForm.valid) {
       return;
     }
+    this.buttonClicked = true;
     const errFn = createErrorHandler(this);
     this.backendService.getSalt(value.username, value.otp)
       .subscribe((response) => {
         const loginData = this.cryptoService.getLoginData(value.username, value.password, response.salt);
-        this.backendService.login(loginData, value.otp)
-          .subscribe((tokenResponse) => this.onSuccess(tokenResponse.token, value.password, response.salt), errFn);
+        this.backendService
+          .login(loginData, value.otp)
+          .subscribe((tokenResponse) => setTimeout(() => this.onSuccess(tokenResponse.token, value.password, response.salt), 100), errFn);
       }, errFn);
   }
 
   private onSuccess(token: string, password: string, salt: string) {
+    this.buttonClicked = false;
     this.notificationKey = 'login.successful';
     this.isSuccess = true;
     window.scrollTo(0, 0);

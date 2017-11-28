@@ -7,16 +7,16 @@ export class SessionService {
   private encKey: string = 'encKey';
 
   public storeSession(token: string, key: string): void {
-    sessionStorage.setItem(this.tokenKey, token);
-    sessionStorage.setItem(this.encKey, key);
+    window.sessionStorage.setItem(this.tokenKey, token);
+    window.sessionStorage.setItem(this.encKey, key);
   }
 
   public getToken(): string {
-    return sessionStorage.getItem(this.tokenKey);
+    return window.sessionStorage.getItem(this.tokenKey);
   }
 
   public getKey(): string {
-    return sessionStorage.getItem(this.encKey);
+    return window.sessionStorage.getItem(this.encKey);
   }
 
   public isLoggedIn(): boolean {
@@ -24,7 +24,7 @@ export class SessionService {
   }
 
   public logout(): void {
-    sessionStorage.removeItem(this.tokenKey);
-    sessionStorage.removeItem(this.encKey);
+    window.sessionStorage.removeItem(this.tokenKey);
+    window.sessionStorage.removeItem(this.encKey);
   }
 }

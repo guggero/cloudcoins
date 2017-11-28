@@ -51,16 +51,17 @@ export function matchValueValidator(value: string) {
 }
 
 export function createErrorHandler(component: any, scrollUp = true): (error: any) => void {
-  return (err: any): void => {
-    if (!err) {
+  return (response: any): void => {
+    if (!response || !response.error) {
       return;
     }
 
-    let errors = err.errors;
+    let errors = response.error.errors;
     if (errors && errors.length) {
       component.notificationKey = errors[0].messageKey;
     }
     component.isSuccess = false;
+    component.buttonClicked = false;
     if (scrollUp) {
       window.scrollTo(0, 0);
     }

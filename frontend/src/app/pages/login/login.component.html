@@ -58,6 +58,7 @@
               class="btn btn-primary"
               (click)="login(loginForm.value)"
               [disabled]="loginForm.invalid">
+        <span *ngIf="buttonClicked" class="fa fa-cog fa-spin fa-fw"></span>
         Login
       </button>
     </div>

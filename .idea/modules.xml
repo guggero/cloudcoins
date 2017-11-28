@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/backend/cloudcoins-backend.iml" filepath="$PROJECT_DIR$/backend/cloudcoins-backend.iml" />
       <module fileurl="file://$PROJECT_DIR$/docker/cloudcoins-docker.iml" filepath="$PROJECT_DIR$/docker/cloudcoins-docker.iml" />
       <module fileurl="file://$PROJECT_DIR$/frontend/cloudcoins-frontend.iml" filepath="$PROJECT_DIR$/frontend/cloudcoins-frontend.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cloudcoins-parent.iml" filepath="$PROJECT_DIR$/cloudcoins-parent.iml" />
     </modules>
   </component>
 </project>
