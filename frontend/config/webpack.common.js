@@ -35,7 +35,7 @@ module.exports = function (options) {
 
   const entry = {
     polyfills: './src/polyfills.browser.ts',
-    main:      './src/main.browser.ts'
+    main: './src/main.browser.ts'
   };
 
   Object.assign(ngcWebpackConfig.plugin, {
@@ -58,7 +58,7 @@ module.exports = function (options) {
      * See: http://webpack.github.io/docs/configuration.html#resolve
      */
     resolve: {
-      mainFields: [ ...(supportES2015 ? ['es2015'] : []), 'browser', 'module', 'main' ],
+      mainFields: [...(supportES2015 ? ['es2015'] : []), 'browser', 'module', 'main'],
 
       /**
        * An array of extensions that should be used to resolve modules.
@@ -143,14 +143,14 @@ module.exports = function (options) {
          */
         {
           test: /\.(jpg|png|gif)$/,
-          use: 'file-loader'
+          use: 'file-loader?name=assets/img/[name].[ext]'
         },
 
         /* File loader for supporting fonts, for example, in CSS files.
         */
         {
           test: /\.(eot|woff2?|svg|ttf)([\?]?.*)$/,
-          use: 'file-loader'
+          use: 'file-loader?name=assets/img/[name].[ext]'
         }
 
       ],
@@ -216,9 +216,10 @@ module.exports = function (options) {
        * See: https://www.npmjs.com/package/copy-webpack-plugin
        */
       new CopyWebpackPlugin([
-        { from: 'src/assets', to: 'assets' },
-      ],
-        isProd ? { ignore: [ 'mock-data/**/*' ] } : undefined
+          { from: 'src/assets', to: 'assets' },
+          { from: 'src/assets/robots.txt' },
+        ],
+        isProd ? { ignore: ['mock-data/**/*'] } : undefined
       ),
 
       /*
@@ -233,7 +234,7 @@ module.exports = function (options) {
         template: 'src/index.html',
         title: METADATA.title,
         chunksSortMode: function (a, b) {
-          const entryPoints = ["inline","polyfills","sw-register","styles","vendor","main"];
+          const entryPoints = ['inline', 'polyfills', 'sw-register', 'styles', 'vendor', 'main'];
           return entryPoints.indexOf(a.names[0]) - entryPoints.indexOf(b.names[0]);
         },
         metadata: METADATA,
@@ -246,7 +247,7 @@ module.exports = function (options) {
         } : false
       }),
 
-       /**
+      /**
        * Plugin: ScriptExtHtmlWebpackPlugin
        * Description: Enhances html-webpack-plugin functionality
        * with different deployment options for your scripts including:
