@@ -23,8 +23,6 @@ const PurifyPlugin = require('@angular-devkit/build-optimizer').PurifyPlugin;
 const ModuleConcatenationPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-
-
 function getUglifyOptions (supportES2015) {
   const uglifyCompressOptions = {
     pure_getters: true, /* buildOptimizer */
@@ -37,7 +35,7 @@ function getUglifyOptions (supportES2015) {
     ecma: supportES2015 ? 6 : 5,
     warnings: false,
     ie8: false,
-    mangle: true,
+    mangle: false,
     compress: uglifyCompressOptions,
     output: {
       ascii_only: true,
