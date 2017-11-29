@@ -85,7 +85,7 @@ public abstract class EntityResource<T> {
     }
 
     public static Response ok() {
-        return Response.ok().build();
+        return noContent();
     }
 
     public static Response ok(Object entity) {
