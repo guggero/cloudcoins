@@ -5,10 +5,12 @@ import { encodeRaw, decodeRaw } from 'wif';
 import * as BigInteger from 'bigi';
 import * as bs58checkBase from 'bs58check/base';
 
+export function SHA3KECCAK(buffer) {
+  return new Buffer(keccak256.update(buffer).digest(), 'hex');
+}
+
 const CUSTOM_BS58_CHECK = {
-  keccak256: bs58checkBase((buffer) => {
-    return new Buffer(keccak256.update(buffer).digest(), 'hex');
-  })
+  keccak256: bs58checkBase(SHA3KECCAK)
 };
 
 export interface Network {
@@ -24,6 +26,7 @@ export interface Network {
     wif: number;
     bip44: number;
     customHash?: string;
+    noBase58?: boolean;
   };
 }
 
@@ -33,6 +36,8 @@ export function customToWIF(keyPair, network) {
       throw new Error('Missing private key');
     }
     return getCustomBs58(network).encode(encodeRaw(network.wif, keyPair.d.toBuffer(32), keyPair.compressed));
+  } else if (network.noBase58) {
+    return keyPair.d.toBuffer(32).toString('hex');
   } else {
     return keyPair.toWIF();
   }
@@ -46,17 +51,13 @@ export function customGetAddress(keyPair, network) {
     hash.copy(payload, 1);
 
     return getCustomBs58(network).encode(payload);
+  } else if (network.noBase58) {
+    const clonedPair = new ECPair(keyPair.d, keyPair.__Q, {compressed: false, network});
+    const pubKeyUncompressed = clonedPair.getPublicKeyBuffer().slice(1);
+    const hash = SHA3KECCAK(pubKeyUncompressed).slice(-20);
+    return '0x' + Buffer.from(hash).toString('hex');
   } else {
     return keyPair.getAddress();
-  }
-}
-
-export function customImportFromWif(wifUncompressed, network) {
-  if (network.customHash) {
-    const decoded = decodeRaw(getCustomBs58(network).decode(wifUncompressed));
-    return BigInteger.fromBuffer(decoded.privateKey);
-  } else {
-    return ECPair.fromWIF(wifUncompressed, network).d;
   }
 }
 
@@ -159,6 +160,17 @@ export const NETWORKS: Network[] = [{
     scriptHash: 110,
     wif: 50,
     bip44: 0xaa
+  }
+}, {
+  label: 'ETH (Ethereum)',
+  config: {
+    messagePrefix: 'unused',
+    bip32: {public: 0x00, private: 0x00},
+    pubKeyHash: 0,
+    scriptHash: 0,
+    wif: 0,
+    bip44: 0x3c,
+    noBase58: true
   }
 }, {
   label: 'HTML5 (HTMLCOIN)',
