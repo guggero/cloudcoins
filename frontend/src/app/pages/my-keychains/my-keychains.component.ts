@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BackendService } from '../../services/backend.service';
 import { SessionService } from '../../services/session.service';
-import { CryptoService, Keychain, KeyPosition, parseNode } from '../../services/crypto.service';
+import { Coin, CryptoService, Keychain, KeyPair, KeyPosition, parseNode } from '../../services/crypto.service';
 import { customGetAddress, customToWIF, Network, NETWORKS } from '../../networks';
 import _ from 'lodash';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -20,7 +20,7 @@ export class MyKeychainsComponent implements OnInit {
   public keychains: Keychain[];
   public selectedChain: Keychain = null;
   public selectedNetwork: Network = null;
-  public selectedPosition: KeyPosition = null;
+  public selectedCoin: Coin = null;
   public customIndexForm: FormGroup;
 
   constructor(public cryptoService: CryptoService, public sessionService: SessionService,
@@ -36,14 +36,21 @@ export class MyKeychainsComponent implements OnInit {
       .subscribe((keychains) => {
         this.keychains = keychains;
         this.keychains.forEach((keychain) => {
-          keychain.decryptedKey = parseNode(this.cryptoService.decrypt(this.sessionService.getKey(), keychain.key));
-          keychain.positions.forEach((position) =>
-            position.network = NETWORKS.find((n) => n.config.bip44 === position.coinType));
+          keychain.hdRootNode = parseNode(this.cryptoService.decrypt(this.sessionService.getKey(), keychain.key));
+          keychain.hdBip44Node = keychain.hdRootNode.derivePath(`m/44'`);
+          keychain.coins = [];
+          _(keychain.positions)
+            .groupBy('coinType')
+            .forEach((value: KeyPosition[], key: string) => {
+              const coinType = parseInt(key, 10);
+              const coin = this.createCoin(keychain, coinType, value);
+              keychain.coins.push(coin);
+            });
         });
         if (this.keychains.length > 0 && this.selectedChain === null) {
           this.selectedChain = keychains[0];
-          if (this.selectedChain.positions && this.selectedChain.positions.length > 0) {
-            this.selectPosition(this.selectedChain.positions[0]);
+          if (this.selectedChain.coins && this.selectedChain.coins.length > 0) {
+            this.selectCoin(this.selectedChain.coins[0]);
           }
         }
       });
@@ -54,10 +61,7 @@ export class MyKeychainsComponent implements OnInit {
     const keychain = this.selectedChain;
     this.modalService.open(dialogContent).result.then(() => {
       this.backendService.addCustomPosition(keychain, this.selectedNetwork.config.bip44, this.customIndex.value)
-        .subscribe((position) => {
-          keychain.positions.push(position);
-          this.selectPosition(position);
-        });
+        .subscribe((position: KeyPosition) => this.addPosition(position));
     }, noop);
   }
 
@@ -67,56 +71,65 @@ export class MyKeychainsComponent implements OnInit {
 
   public newCoin(network: Network): void {
     this.selectedNetwork = network;
+    const coin = this.createCoin(this.selectedChain, network.config.bip44, []);
+    this.selectedChain.coins.push(coin);
+    this.selectCoin(coin);
     this.newKey();
   }
 
   public newKey(): void {
     const keychain = this.selectedChain;
     this.backendService.increasePosition(keychain, this.selectedNetwork.config.bip44)
-      .subscribe((position) => {
-        position.network = NETWORKS.find((n) => n.config.bip44 === position.coinType);
-        const existingIndex = _.findIndex(keychain.positions, (pos) => pos.coinType === position.coinType);
-        if (existingIndex >= 0) {
-          keychain.positions[existingIndex] = position;
-        } else {
-          keychain.positions.push(position);
-        }
-        this.selectPosition(position);
-      });
+      .subscribe((position: KeyPosition) => this.addPosition(position));
   }
 
   public getSelectableNetworks(): Network[] {
     const sortedNetworks = _.sortBy(NETWORKS, 'label');
-    return sortedNetworks.filter((n) => !_.find(this.selectedChain.positions, (pos) => pos.network.config.bip44 === n.config.bip44));
+    const coins = this.selectedChain.coins;
+    return sortedNetworks.filter((n) => !_.find(coins, (coin) => coin.network.config.bip44 === n.config.bip44));
   }
 
-  public selectPosition(position: KeyPosition) {
-    if (position) {
-      this.calculateKeys(this.selectedChain, position);
-      this.selectedPosition = position;
-      this.selectedNetwork = this.selectedPosition.network;
+  public selectCoin(coin: Coin) {
+    if (coin) {
+      this.selectedCoin = coin;
+      this.selectedNetwork = this.selectedCoin.network;
     } else {
-      this.selectedPosition = null;
+      this.selectedCoin = null;
     }
   }
 
-  private calculateKeys(keychain: Keychain, position: KeyPosition): void {
-    position.keyPairs = [];
-    if (!position.custom) {
-      for (let i = 0; i <= position.index; i++) {
-        position.keyPairs.push(this.keyPair(keychain, position, i));
+  private addPosition(position: KeyPosition): void {
+    this.selectedCoin.keyPairs.push(this.getKeyPair(this.selectedCoin.hdNode, position.index, this.selectedCoin.network));
+    // invoke change detection by creating a new array reference
+    this.selectedCoin.keyPairs = this.selectedCoin.keyPairs.slice();
+  }
+
+  private createCoin(keychain: Keychain, coinType: number, positions: KeyPosition[]): Coin {
+    const hdNode = this.getCoinParentNode(keychain.hdBip44Node, coinType);
+    const network = NETWORKS.find((n) => n.config.bip44 === coinType);
+    const coin = {coinType, network, hdNode, keyPairs: []};
+    positions.forEach((position: KeyPosition) => {
+      if (position.custom) {
+        coin.keyPairs.push(this.getKeyPair(hdNode, position.index, network));
+      } else {
+        for (let i = 0; i <= position.index; i++) {
+          coin.keyPairs.push(this.getKeyPair(hdNode, i, network));
+        }
       }
-    } else {
-      position.keyPairs.push(this.keyPair(keychain, position, position.index));
-    }
+    });
+    return coin;
   }
 
-  private keyPair(keychain: Keychain, position: KeyPosition, index: number): string {
-    const keyPair = keychain.decryptedKey.derivePath(`m/44'/${position.coinType}'/0'/0/${index}`).keyPair;
-    keyPair.index = index;
-    keyPair.network = position.network.config;
-    keyPair.wif = customToWIF(keyPair, keyPair.network);
-    keyPair.address = customGetAddress(keyPair, keyPair.network);
-    return keyPair;
+  private getCoinParentNode(hdRootNode: any, coinType: number): any {
+    return hdRootNode.derivePath(`${coinType}'/0'/0`);
+  }
+
+  private getKeyPair(hdParentNode: any, index: number, network: Network): KeyPair {
+    const childNode = hdParentNode.derivePath(`${index}`);
+    return {
+      index,
+      wif: customToWIF(childNode.keyPair, network),
+      address: customGetAddress(childNode.keyPair, network)
+    };
   }
 }

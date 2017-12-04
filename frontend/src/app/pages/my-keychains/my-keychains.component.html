@@ -46,16 +46,16 @@
   <div *ngIf="selectedChain !== null">
     <h4>Addresses for keychain {{selectedChain.name}}</h4>
     <nav class="navbar navbar-expand-md navbar-light bg-light position-selection mb-4">
-      <span class="navbar-text" *ngIf="!selectedChain.positions || selectedChain.positions.length === 0">
+      <span class="navbar-text" *ngIf="!selectedChain.coins || selectedChain.coins.length === 0">
           No coin/crypto currency added yet
       </span>
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item" *ngFor="let position of selectedChain.positions">
+          <li class="nav-item" *ngFor="let coin of selectedChain.coins">
             <a class="nav-link"
-               (click)="selectPosition(position)"
-               [class.active]="selectedPosition === position">
-              {{position.network.label}}
+               (click)="selectCoin(coin)"
+               [class.active]="selectedCoin === coin">
+              {{coin.network.label}}
             </a>
           </li>
         </ul>
@@ -72,7 +72,7 @@
       </div>
     </nav>
 
-    <table class="table mb-4" *ngIf="selectedPosition">
+    <table class="table mb-4" *ngIf="selectedCoin">
       <thead>
       <tr>
         <th>#</th>
@@ -82,7 +82,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let pair of selectedPosition.keyPairs">
+      <tr *ngFor="let pair of selectedCoin.keyPairs | orderBy: 'index'">
         <td>{{pair.index}}</td>
         <td>{{pair.address}}</td>
         <td>n/a</td>

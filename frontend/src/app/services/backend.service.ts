@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpHeaders } from '@angular/common/http';
-import { Account, Keychain, KeyPosition } from './crypto.service';
+import { Keychain, KeyPosition } from './crypto.service';
 import { SessionService } from './session.service';
 import { Observable } from 'rxjs/Observable';
+import { Account } from './account';
 
 export const AUTH_HEADER = 'Authorization';
 export const AUTH_PREFIX = 'Bearer ';

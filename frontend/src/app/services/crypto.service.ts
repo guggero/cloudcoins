@@ -5,6 +5,7 @@ import { pbkdf2Sync } from 'pbkdf2';
 import { AES, enc, HmacSHA512 } from 'crypto-js';
 import { generateMnemonic, mnemonicToSeed } from 'bip39';
 import { Network } from '../networks';
+import { Account } from './account';
 
 export const PBKDF2_HMAC_LEN = 64;
 export const PBKDF2_ROUNDS = 10240;
@@ -44,39 +45,35 @@ export function hmacSha512(sha512: string): any {
   return HmacSHA512('Seed version', sha512);
 }
 
-export class Account {
-  constructor(public username: string,
-              public salt: string,
-              public backendIdentification: string,
-              public otpAuthKey?: string) {
-  }
-
-  public getPersistablePart(): any {
-    return {
-      username: this.username,
-      salt: this.salt,
-      password: this.backendIdentification,
-      otpAuthKey: this.otpAuthKey,
-    };
-  }
-}
-
 export interface KeyPosition {
   id: number;
   coinType: number;
   index: number;
   custom: boolean;
-  keyPairs?: any[];
-  network?: Network;
+}
+
+export interface KeyPair {
+  index: number;
+  wif: string;
+  address: string;
+}
+
+export interface Coin {
+  coinType: number;
+  hdNode: any;
+  network: Network;
+  keyPairs: KeyPair[];
 }
 
 export interface Keychain {
   id?: number;
   name: string;
   key: string;
-  decryptedKey?: any;
+  hdRootNode?: any;
+  hdBip44Node?: any;
   createdAt?: Date;
   positions: KeyPosition[];
+  coins?: Coin[];
 }
 
 @Injectable()
