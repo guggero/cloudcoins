@@ -13,30 +13,32 @@ const CUSTOM_BS58_CHECK = {
   keccak256: bs58checkBase(SHA3KECCAK)
 };
 
-export interface Network {
-  label: string;
-  config: {
-    messagePrefix: string;
-    bip32: {
-      public: number;
-      private: number;
-    };
-    pubKeyHash: number;
-    scriptHash: number;
-    wif: number;
-    bip44: number;
-    customHash?: string;
-    noBase58?: boolean;
+export interface NetworkConfig {
+  messagePrefix: string;
+  bip32: {
+    public: number;
+    private: number;
   };
+  pubKeyHash: number;
+  scriptHash: number;
+  wif: number;
+  bip44: number;
+  customHash?: string;
+  noBase58?: boolean;
 }
 
-export function customToWIF(keyPair, network) {
-  if (network.customHash) {
+export interface Network {
+  label: string;
+  config: NetworkConfig;
+}
+
+export function customToWIF(keyPair: any, networkConfig: NetworkConfig) {
+  if (networkConfig.customHash) {
     if (!keyPair.d) {
       throw new Error('Missing private key');
     }
-    return getCustomBs58(network).encode(encodeRaw(network.wif, keyPair.d.toBuffer(32), keyPair.compressed));
-  } else if (network.noBase58) {
+    return getCustomBs58(networkConfig).encode(encodeRaw(networkConfig.wif, keyPair.d.toBuffer(32), keyPair.compressed));
+  } else if (networkConfig.noBase58) {
     return keyPair.d.toBuffer(32).toString('hex');
   } else {
     return keyPair.toWIF();

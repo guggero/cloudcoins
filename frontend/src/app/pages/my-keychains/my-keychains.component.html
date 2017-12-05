@@ -26,7 +26,7 @@
                 name="chain"
                 class="form-control"
                 [(ngModel)]="selectedChain"
-                (change)="selectPosition(selectedChain.positions[0])">
+                (change)="selectCoin(selectedChain.coins[0])">
           <option *ngFor="let chain of keychains" [ngValue]="chain">{{chain.name}}</option>
         </select>
       </div>
@@ -91,8 +91,8 @@
       </tbody>
     </table>
 
-    <button class="btn" *ngIf="selectedNetwork" (click)="newKey()">New key</button>
-    <button class="btn" *ngIf="selectedNetwork" (click)="openDialog(customKeyDialog)">Add key with custom index</button>
+    <button class="btn" *ngIf="selectedCoin" (click)="newKey()">New key</button>
+    <button class="btn" *ngIf="selectedCoin" (click)="openDialog(customKeyDialog)">Add key with custom index</button>
   </div>
 
   <ng-template #customKeyDialog let-c="close" let-d="dismiss">

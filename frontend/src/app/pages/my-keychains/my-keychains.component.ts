@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../../services/backend.service';
 import { SessionService } from '../../services/session.service';
 import { Coin, CryptoService, Keychain, KeyPair, KeyPosition, parseNode } from '../../services/crypto.service';
@@ -19,7 +19,6 @@ export class MyKeychainsComponent implements OnInit {
   public helpShown: boolean = false;
   public keychains: Keychain[];
   public selectedChain: Keychain = null;
-  public selectedNetwork: Network = null;
   public selectedCoin: Coin = null;
   public customIndexForm: FormGroup;
 
@@ -60,7 +59,7 @@ export class MyKeychainsComponent implements OnInit {
     this.customIndexForm.get('customIndex').setValue(0);
     const keychain = this.selectedChain;
     this.modalService.open(dialogContent).result.then(() => {
-      this.backendService.addCustomPosition(keychain, this.selectedNetwork.config.bip44, this.customIndex.value)
+      this.backendService.addCustomPosition(keychain, this.selectedCoin.network.config.bip44, this.customIndex.value)
         .subscribe((position: KeyPosition) => this.addPosition(position));
     }, noop);
   }
@@ -70,7 +69,6 @@ export class MyKeychainsComponent implements OnInit {
   }
 
   public newCoin(network: Network): void {
-    this.selectedNetwork = network;
     const coin = this.createCoin(this.selectedChain, network.config.bip44, []);
     this.selectedChain.coins.push(coin);
     this.selectCoin(coin);
@@ -79,7 +77,7 @@ export class MyKeychainsComponent implements OnInit {
 
   public newKey(): void {
     const keychain = this.selectedChain;
-    this.backendService.increasePosition(keychain, this.selectedNetwork.config.bip44)
+    this.backendService.increasePosition(keychain, this.selectedCoin.network.config.bip44)
       .subscribe((position: KeyPosition) => this.addPosition(position));
   }
 
@@ -90,12 +88,7 @@ export class MyKeychainsComponent implements OnInit {
   }
 
   public selectCoin(coin: Coin) {
-    if (coin) {
-      this.selectedCoin = coin;
-      this.selectedNetwork = this.selectedCoin.network;
-    } else {
-      this.selectedCoin = null;
-    }
+    this.selectedCoin = coin;
   }
 
   private addPosition(position: KeyPosition): void {
@@ -126,10 +119,11 @@ export class MyKeychainsComponent implements OnInit {
 
   private getKeyPair(hdParentNode: any, index: number, network: Network): KeyPair {
     const childNode = hdParentNode.derivePath(`${index}`);
+    childNode.keyPair.network = network.config;
     return {
       index,
-      wif: customToWIF(childNode.keyPair, network),
-      address: customGetAddress(childNode.keyPair, network)
+      wif: customToWIF(childNode.keyPair, network.config),
+      address: customGetAddress(childNode.keyPair, network.config)
     };
   }
 }
