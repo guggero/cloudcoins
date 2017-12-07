@@ -4,14 +4,21 @@ import { Keychain, KeyPosition } from './crypto.service';
 import { SessionService } from './session.service';
 import { Observable } from 'rxjs/Observable';
 import { Account } from './account';
+import { formatString } from '../ui-components/functions';
 
 export const AUTH_HEADER = 'Authorization';
 export const AUTH_PREFIX = 'Bearer ';
+export const BALANCE_API_KEY = '22ea057c8f38';
+export const BALANCE_API_URL = `https://chainz.cryptoid.info/%s/api.dws?q=multiaddr&key=${BALANCE_API_KEY}&active=%s`;
 
 @Injectable()
 export class BackendService {
 
   constructor(private http: HttpClient, private sessionService: SessionService) {
+  }
+
+  public loadBalance(coinName: string, address: string): Observable<any> {
+    return this.http.get<Object>(formatString(BALANCE_API_URL, coinName, address));
   }
 
   public createMessage(captcha: any, message: any): Observable<string> {

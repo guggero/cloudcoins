@@ -66,6 +66,7 @@
           <div class="dropdown-menu">
             <a class="dropdown-item" *ngFor="let network of getSelectableNetworks()" (click)="newCoin(network)">
               {{network.label}}
+              <span title="Balance supported" *ngIf="network.config.apiName" class="has-balance fa fa-money"></span>
             </a>
           </div>
         </div>
@@ -85,7 +86,7 @@
       <tr *ngFor="let pair of selectedCoin.keyPairs | orderBy: 'index'">
         <td>{{pair.index}}</td>
         <td>{{pair.address}}</td>
-        <td>n/a</td>
+        <td>{{pair.balance}}</td>
         <td><a class="link" (click)="pair.showKey = !pair.showKey">{{pair.showKey ? pair.wif : 'Show'}}</a></td>
       </tr>
       </tbody>

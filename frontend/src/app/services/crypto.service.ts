@@ -56,6 +56,7 @@ export interface KeyPair {
   index: number;
   wif: string;
   address: string;
+  balance?: string;
 }
 
 export interface Coin {

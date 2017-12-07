@@ -23,6 +23,7 @@ export interface NetworkConfig {
   scriptHash: number;
   wif: number;
   bip44: number;
+  apiName?: string;
   customHash?: string;
   noBase58?: boolean;
 }
@@ -91,7 +92,8 @@ export const NETWORKS: Network[] = [{
     pubKeyHash: 25,
     scriptHash: 85,
     wif: 153,
-    bip44: 0x0a
+    bip44: 0x0a,
+    apiName: 'blk'
   }
 }, {
   label: 'BTC (Bitcoin Testnet)',
@@ -131,7 +133,8 @@ export const NETWORKS: Network[] = [{
     pubKeyHash: 76,
     scriptHash: 16,
     wif: 204,
-    bip44: 0x05
+    bip44: 0x05,
+    apiName: 'dash'
   }
 }, {
   label: 'DGB (DigiByte)',
@@ -141,7 +144,8 @@ export const NETWORKS: Network[] = [{
     pubKeyHash: 30,
     scriptHash: 5,
     wif: 128,
-    bip44: 0x14
+    bip44: 0x14,
+    apiName: 'dgb'
   }
 }, {
   label: 'DOGE (Dogecoin)',
@@ -202,7 +206,8 @@ export const NETWORKS: Network[] = [{
     pubKeyHash: 48,
     scriptHash: 50,
     wif: 176,
-    bip44: 0x02
+    bip44: 0x02,
+    apiName: 'ltc'
   }
 }, {
   label: 'PIVX (PIVX)',
@@ -212,7 +217,8 @@ export const NETWORKS: Network[] = [{
     pubKeyHash: 30,
     scriptHash: 13,
     wif: 212,
-    bip44: 0x77
+    bip44: 0x77,
+    apiName: 'pivx'
   }
 }, {
   label: 'RDD (ReddCoin)',
@@ -253,7 +259,8 @@ export const NETWORKS: Network[] = [{
     pubKeyHash: 65,
     scriptHash: 196,
     wif: 193,
-    bip44: 0x69
+    bip44: 0x69,
+    apiName: 'strat'
   }
 }, {
   label: 'TRC (Terracoin)',
@@ -273,7 +280,8 @@ export const NETWORKS: Network[] = [{
     pubKeyHash: 71,
     scriptHash: 33,
     wif: 199,
-    bip44: 0x0e
+    bip44: 0x0e,
+    apiName: 'via'
   }
 }, {
   label: 'XVG (Verge)',

@@ -67,3 +67,11 @@ export function createErrorHandler(component: any, scrollUp = true): (error: any
     }
   };
 }
+
+export function formatString(str: string, ...args: string[]): string {
+  let i = 0;
+
+  return str.replace(/%s/g, function () {
+    return args[i++];
+  });
+}

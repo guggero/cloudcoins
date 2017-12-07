@@ -120,10 +120,24 @@ export class MyKeychainsComponent implements OnInit {
   private getKeyPair(hdParentNode: any, index: number, network: Network): KeyPair {
     const childNode = hdParentNode.derivePath(`${index}`);
     childNode.keyPair.network = network.config;
-    return {
+    const keyPair: KeyPair = {
       index,
       wif: customToWIF(childNode.keyPair, network.config),
-      address: customGetAddress(childNode.keyPair, network.config)
+      address: customGetAddress(childNode.keyPair, network.config),
+      balance: 'n/a'
     };
+    if (network.config.apiName) {
+      this.backendService.loadBalance(network.config.apiName, keyPair.address)
+        .subscribe((response) => {
+          if (response && response.addresses) {
+            if (response.addresses.length > 0) {
+              keyPair.balance = `${response.addresses[0].final_balance / 100000000}`;
+            } else if (response.addresses.length === 0) {
+              keyPair.balance = '0';
+            }
+          }
+        });
+    }
+    return keyPair;
   }
 }
