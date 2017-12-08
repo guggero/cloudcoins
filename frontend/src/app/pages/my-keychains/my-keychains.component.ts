@@ -7,6 +7,15 @@ import _ from 'lodash';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { noop } from 'rxjs/util/noop';
+import { toDataURL } from 'qrcode/lib/browser';
+
+export const QR_CODE_OPTIONS = {
+  errorCorrectionLevel: 'H',
+  type: 'image/jpeg',
+  rendererOpts: {
+    quality: 0.3
+  }
+};
 
 @Component({
   selector: 'my-keychains',
@@ -126,6 +135,8 @@ export class MyKeychainsComponent implements OnInit {
       address: customGetAddress(childNode.keyPair, network.config),
       balance: 'n/a'
     };
+    toDataURL(keyPair.wif, QR_CODE_OPTIONS, (err, url) => keyPair.qrWif = url);
+    toDataURL(keyPair.address, QR_CODE_OPTIONS, (err, url) => keyPair.qrAddress = url);
     if (network.config.apiName) {
       this.backendService.loadBalance(network.config.apiName, keyPair.address)
         .subscribe((response) => {

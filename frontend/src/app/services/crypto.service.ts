@@ -57,6 +57,10 @@ export interface KeyPair {
   wif: string;
   address: string;
   balance?: string;
+  qrWif?: string;
+  qrAddress?: string;
+  showWif?: boolean;
+  showAddress?: boolean;
 }
 
 export interface Coin {

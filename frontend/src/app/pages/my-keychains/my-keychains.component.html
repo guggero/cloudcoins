@@ -85,9 +85,15 @@
       <tbody>
       <tr *ngFor="let pair of selectedCoin.keyPairs | orderBy: 'index'">
         <td>{{pair.index}}</td>
-        <td>{{pair.address}}</td>
+        <td>
+          <a class="link" (click)="pair.showAddress = !pair.showAddress">{{pair.address}}</a>
+          <img *ngIf="pair.showAddress && pair.qrAddress" [src]="pair.qrAddress">
+        </td>
         <td>{{pair.balance}}</td>
-        <td><a class="link" (click)="pair.showKey = !pair.showKey">{{pair.showKey ? pair.wif : 'Show'}}</a></td>
+        <td>
+          <a class="link" (click)="pair.showWif = !pair.showWif">{{pair.showWif ? pair.wif : 'Show'}}</a>
+          <img *ngIf="pair.showWif && pair.qrWif" [src]="pair.qrWif">
+        </td>
       </tr>
       </tbody>
     </table>
