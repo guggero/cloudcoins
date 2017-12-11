@@ -3,3 +3,19 @@ table {
     vertical-align: top;
   }
 }
+
+/deep/ ngb-tabset {
+
+  ul.nav-tabs {
+    margin: 0 15px;
+  }
+
+  div.tab-content {
+    margin: 0 15px;
+    margin-bottom: 30px;
+
+    padding: 20px 5px;
+    border: 1px solid #ddd;
+    border-top: none;
+  }
+}

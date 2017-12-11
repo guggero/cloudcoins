@@ -52,3 +52,9 @@ nav.navbar.position-selection {
     position: absolute;
   }
 }
+
+a.link, a.link:not([href]):not([tabindex]) {
+  color: #fec503;
+  text-decoration: underline;
+  cursor: pointer;
+}

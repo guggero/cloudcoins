@@ -31,8 +31,8 @@ export function strenghtenPasswordPBKDF2(password: Buffer, salt: Buffer): Buffer
   return pbkdf2Sync(password, salt, PBKDF2_ROUNDS, PBKDF2_HMAC_LEN, PBKDF2_DIGEST);
 }
 
-export function generateDeterministicNode(): string {
-  const seed = mnemonicToSeed(generateMnemonic());
+export function generateDeterministicNode(mnemonic: string = null, password: string = null): string {
+  const seed = mnemonicToSeed(mnemonic || generateMnemonic(), password);
   const node = HDNode.fromSeedBuffer(seed, networks.bitcoin);
   return node.toBase58();
 }

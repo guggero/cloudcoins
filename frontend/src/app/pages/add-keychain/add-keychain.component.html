@@ -1,9 +1,11 @@
 <section>
-  <h3>Add new keychain</h3>
+  <h3>Add / import new keychain</h3>
+
+  <notification [notificationKey]="notificationKey" [isSuccess]="isSuccess"></notification>
 
   <form name="keychainForm" [formGroup]="keychainForm">
 
-    <div class="form-group col-lg-8">
+    <div class="form-group col-lg-12">
       <label for="name" class="col-form-label">Name</label>
       <input type="text"
              name="name"
@@ -15,32 +17,102 @@
            *ngIf="(name.dirty || name.touched) && name.invalid">
         Please enter a name.
       </div>
+      <small class="form-text text-muted">Enter a name to identify this keychain later.</small>
     </div>
 
-    <div class="form-group col-lg-8">
-      <label for="masterKey">BIP32 master key</label>
-      <input type="text"
-             name="masterKey"
-             class="form-control"
-             formControlName="masterKey"
-             [ngClass]="{'is-invalid': (masterKey.dirty || masterKey.touched) && masterKey.invalid}"
-             id="masterKey">
-      <div class="form-control-feedback invalid"
-           *ngIf="(masterKey.dirty || masterKey.touched) && masterKey.invalid">
-        Please enter a valid BIP32 bitcoin master key (starts with xprv)
-      </div>
-      <small class="form-text text-muted">This is a generated random key. You can also paste your own key here.</small>
-    </div>
+    <ngb-tabset justify="justified" (tabChange)="changeTab($event)">
+      <!-- generate random key -->
+      <ngb-tab title="Generate random key" id="generate">
+        <ng-template ngbTabContent>
+          <div class="form-group col-lg-12">
+            <label for="generatedKey">Generated BIP32 root key</label>
+            <input type="text"
+                   name="generatedKey"
+                   class="form-control"
+                   formControlName="generatedKey"
+                   readonly="readonly"
+                   [ngClass]="{'is-invalid': (generatedKey.dirty || generatedKey.touched) && generatedKey.invalid}"
+                   id="generatedKey">
+            <small class="form-text text-muted">
+              This is a generated random key.
+              <a class="link" (click)="newKey()">Click here to generate a new key (can take a few seconds).</a>
+            </small>
+          </div>
+        </ng-template>
+      </ngb-tab>
+
+      <!-- Import BIP32 root key -->
+      <ngb-tab title="Import BIP32 root key" id="import-bip32">
+        <ng-template ngbTabContent>
+          <div class="form-group col-lg-12">
+            <label for="importedKey">BIP32 root key</label>
+            <input type="text"
+                   name="importedKey"
+                   class="form-control"
+                   formControlName="importedKey"
+                   [ngClass]="{'is-invalid': (importedKey.dirty || importedKey.touched) && importedKey.invalid}"
+                   id="importedKey">
+            <div class="form-control-feedback invalid"
+                 *ngIf="(importedKey.dirty || importedKey.touched) && importedKey.invalid">
+              Please enter a valid BIP32 bitcoin root key (starts with xprv)
+            </div>
+            <small class="form-text text-muted">Please paste your existing root key (starts with 'xprv') here.</small>
+          </div>
+        </ng-template>
+      </ngb-tab>
+
+      <!-- Import coinomi mnemonic -->
+      <ngb-tab title="Import coinomi recovery phrase" id="import-coinomi">
+        <ng-template ngbTabContent>
+          <div class="form-group col-lg-12">
+            <label for="coinomiPhrase">Coinomi recovery phrase</label>
+            <input type="text"
+                   name="coinomiPhrase"
+                   class="form-control"
+                   formControlName="coinomiPhrase"
+                   [ngClass]="{'is-invalid': (coinomiPhrase.dirty || coinomiPhrase.touched) && coinomiPhrase.invalid}"
+                   id="coinomiPhrase">
+            <div class="form-control-feedback invalid"
+                 *ngIf="(coinomiPhrase.dirty || coinomiPhrase.touched) && coinomiPhrase.invalid">
+              Please enter a valid coinomi recovery phrase (usually 12 english words).
+            </div>
+            <small class="form-text text-muted">Type your 12 word mnemonic coinomi recovery phrase here.</small>
+          </div>
+          <div class="form-group col-lg-12">
+            <label for="coinomiPassphrase">Coinomi BIP39 Passhprase (optional)</label>
+            <input type="text"
+                   name="coinomiPassphrase"
+                   class="form-control"
+                   formControlName="coinomiPassphrase"
+                   [ngClass]="{'is-invalid': (coinomiPassphrase.dirty || coinomiPassphrase.touched) && coinomiPassphrase.invalid}"
+                   id="coinomiPassphrase">
+            <small class="form-text text-muted">
+              Only type a Passhprase here if you also used one in your coinomi wallet! Otherwise a completely empty wallet will be generated.
+            </small>
+          </div>
+          <div class="form-group col-lg-12">
+            <label for="calculatedCoinomiKey">Derived BIP32 root key</label>
+            <input type="text"
+                   name="calculatedCoinomiKey"
+                   [value]="calculatedCoinomiKey"
+                   class="form-control"
+                   readonly="readonly"
+                   id="calculatedCoinomiKey">
+            <small class="form-text text-muted">
+              This is the root key that coinomi uses internally to derive passwords.
+            </small>
+          </div>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
   </form>
 
   <div class="col-lg-8">
-    <div class="float-right">
-      <button type="button"
-              class="btn btn-primary"
-              (click)="save(keychainForm.value)"
-              [disabled]="keychainForm.invalid">
-        Create keychain
-      </button>
-    </div>
+    <button type="button"
+            class="btn btn-primary"
+            (click)="save(keychainForm.value)"
+            [disabled]="keychainForm.invalid">
+      Create keychain
+    </button>
   </div>
 </section>
