@@ -6,6 +6,7 @@
   "ch.cloudcoins.errors.invalidState": "Invalid state!",
   "ch.cloudcoins.errors.concurrentUpdateOccured": "Concurrent update, refresh page and try again!",
   "ch.cloudcoins.errors.internalServerError": "Server error. Please try again.",
+  "ch.cloudcoins.errors.connectionError": "Server or communication error. Please try again.",
   "ch.cloudcoins.errors.usernameExists": "The chosen username already exists.",
   "ch.cloudcoins.errors.invalidBip32RootKey": "Invalid BIP 32 root key. It should start with 'xprv'",
   "login.successful": "You are now logged in.",

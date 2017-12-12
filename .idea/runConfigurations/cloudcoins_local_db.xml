@@ -21,7 +21,7 @@
     <predefined_log_file id="JBoss" enabled="true" />
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <RunnerSettings RunnerId="Debug">
-      <option name="DEBUG_PORT" value="33526" />
+      <option name="DEBUG_PORT" value="34526" />
     </RunnerSettings>
     <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
       <option name="USE_ENV_VARIABLES" value="true" />

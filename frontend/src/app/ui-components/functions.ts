@@ -59,6 +59,8 @@ export function createErrorHandler(component: any, scrollUp = true): (error: any
     let errors = response.error.errors;
     if (errors && errors.length) {
       component.notificationKey = errors[0].messageKey;
+    } else if (response.error) {
+      component.notificationKey = 'ch.cloudcoins.errors.connectionError';
     }
     component.isSuccess = false;
     component.buttonClicked = false;
