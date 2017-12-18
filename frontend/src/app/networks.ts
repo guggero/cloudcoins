@@ -2,15 +2,22 @@ import { networks, ECPair, crypto } from 'bitcoinjs-lib';
 import { keccak256 } from 'js-sha3';
 import { Buffer } from 'safe-buffer';
 import { encodeRaw, decodeRaw } from 'wif';
-import * as BigInteger from 'bigi';
 import * as bs58checkBase from 'bs58check/base';
 
-export function SHA3KECCAK(buffer) {
-  return new Buffer(keccak256.update(buffer).digest(), 'hex');
-}
+export const SHA3KECCAK = (buffer) => new Buffer(keccak256.update(buffer).digest(), 'hex');
+export const NO_HASH = (buffer) => buffer;
 
 const CUSTOM_BS58_CHECK = {
-  keccak256: bs58checkBase(SHA3KECCAK)
+  keccak256: {
+    wif: bs58checkBase(SHA3KECCAK),
+    address: bs58checkBase(SHA3KECCAK),
+    pubKeyHash: crypto.hash160
+  },
+  noHashAddress: {
+    wif: bs58checkBase(crypto.hash256),
+    address: bs58checkBase(NO_HASH),
+    pubKeyHash: crypto.ripemd160
+  }
 };
 
 export interface NetworkConfig {
@@ -38,7 +45,7 @@ export function customToWIF(keyPair: any, networkConfig: NetworkConfig) {
     if (!keyPair.d) {
       throw new Error('Missing private key');
     }
-    return getCustomBs58(networkConfig).encode(encodeRaw(networkConfig.wif, keyPair.d.toBuffer(32), keyPair.compressed));
+    return getCustomBs58(networkConfig).wif.encode(encodeRaw(networkConfig.wif, keyPair.d.toBuffer(32), keyPair.compressed));
   } else if (networkConfig.noBase58) {
     return keyPair.d.toBuffer(32).toString('hex');
   } else {
@@ -48,12 +55,13 @@ export function customToWIF(keyPair: any, networkConfig: NetworkConfig) {
 
 export function customGetAddress(keyPair, network) {
   if (network.customHash) {
-    const hash = crypto.hash160(keyPair.getPublicKeyBuffer());
+    const customBs58 = getCustomBs58(network);
+    const hash = customBs58.pubKeyHash(keyPair.getPublicKeyBuffer());
     const payload = Buffer.allocUnsafe(21);
     payload.writeUInt8(network.pubKeyHash, 0);
     hash.copy(payload, 1);
 
-    return getCustomBs58(network).encode(payload);
+    return customBs58.address.encode(payload);
   } else if (network.noBase58) {
     const clonedPair = new ECPair(keyPair.d, keyPair.__Q, {compressed: false, network});
     const pubKeyUncompressed = clonedPair.getPublicKeyBuffer().slice(1);
@@ -75,6 +83,17 @@ function getCustomBs58(network) {
 // from https://github.com/guggero/blockchain-demo/blob/master/bitcoin-networks.js
 // sorted by label, not by preference ;-)
 export const NETWORKS: Network[] = [{
+  label: 'ARK (Ark)',
+  config: {
+    messagePrefix: '\x18Ark Signed Message:\n',
+    bip32: {public: 0x2bf4968, private: 0x2bf4530},
+    pubKeyHash: 23,
+    scriptHash: 23, // not used by ark
+    wif: 170,
+    bip44: 0x6f,
+    customHash: 'noHashAddress'
+  }
+}, {
   label: 'BCH (BitcoinCash)',
   config: {
     messagePrefix: 'unused',
