@@ -5,7 +5,6 @@ import { encodeRaw, decodeRaw } from 'wif';
 import * as bs58checkBase from 'bs58check/base';
 
 export const SHA3KECCAK = (buffer) => new Buffer(keccak256.update(buffer).digest(), 'hex');
-export const NO_HASH = (buffer) => buffer;
 
 const CUSTOM_BS58_CHECK = {
   keccak256: {
@@ -13,9 +12,9 @@ const CUSTOM_BS58_CHECK = {
     address: bs58checkBase(SHA3KECCAK),
     pubKeyHash: crypto.hash160
   },
-  noHashAddress: {
+  dontSHA256HashPubkey: {
     wif: bs58checkBase(crypto.hash256),
-    address: bs58checkBase(NO_HASH),
+    address: bs58checkBase(crypto.hash256),
     pubKeyHash: crypto.ripemd160
   }
 };
@@ -91,7 +90,7 @@ export const NETWORKS: Network[] = [{
     scriptHash: 23, // not used by ark
     wif: 170,
     bip44: 0x6f,
-    customHash: 'noHashAddress'
+    customHash: 'dontSHA256HashPubkey'
   }
 }, {
   label: 'BCH (BitcoinCash)',
