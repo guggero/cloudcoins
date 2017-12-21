@@ -8,6 +8,22 @@ The project is in a very early stage, so this is work in progress.
 
 ## development
 
+### Preparing Projects
+1. fork and clone repo
+1. import into intellij
+1. run maven task `install` on projects `cloudcoins-frontend` `cloudcoins-backend`
+
+### Setting up local Application server 
+1. Download WildFly [10.1.0-Final](http://download.jboss.org/wildfly/10.1.0.Final/wildfly-10.1.0.Final.zip) and extract content
+1. Copy files to local WildFly. You can use the script: copy-files-to-jboss.sh
+   1. usage: `./copy-files-to-jboss.sh /absolute/installation/path/wildfly-10.1.0.Final`
+1. Add Jboss server in Intellij
+   1. on top right dropdown -> edit configurations
+   1. add a new one with `+`
+   1. choose local Jboss
+   1. specify Jboss directory
+   1. In deployment tab, add Artifacts with `+`, choose exploded versions
+
 ### start local database
 
 ```bash
