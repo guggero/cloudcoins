@@ -65,10 +65,26 @@ export function customGetAddress(keyPair, network) {
     const clonedPair = new ECPair(keyPair.d, keyPair.__Q, {compressed: false, network});
     const pubKeyUncompressed = clonedPair.getPublicKeyBuffer().slice(1);
     const hash = SHA3KECCAK(pubKeyUncompressed).slice(-20);
-    return '0x' + Buffer.from(hash).toString('hex');
+    return toChecksumEthereumAddress(Buffer.from(hash).toString('hex'));
   } else {
     return keyPair.getAddress();
   }
+}
+
+function toChecksumEthereumAddress(address) {
+  address = address.toLowerCase().replace('0x', '');
+  const hash = keccak256.update(address).toString();
+  let ret = '0x';
+
+  for (let i = 0; i < address.length; i++) {
+    if (parseInt(hash[i], 16) >= 8) {
+      ret += address[i].toUpperCase();
+    } else {
+      ret += address[i];
+    }
+  }
+
+  return ret;
 }
 
 function getCustomBs58(network) {
