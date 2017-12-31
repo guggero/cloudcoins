@@ -255,6 +255,17 @@ export const NETWORKS: Network[] = [{
     apiName: 'pivx'
   }
 }, {
+  label: 'POT (Potcoin)',
+  config: {
+    messagePrefix: 'unused',
+    bip32: { public: 0x00, private: 0x00 },
+    pubKeyHash: 55,
+    scriptHash: 5,
+    wif: 183,
+    bip44: 0x51,
+    apiName: 'pot'
+  }
+}, {
   label: 'RDD (ReddCoin)',
   config: {
     messagePrefix: 'unused',
