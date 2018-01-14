@@ -39,7 +39,7 @@
     <div class="col-6">
       <div class="form-group">
         <a routerLink="/add-keychain" class="btn btn-primary" role="button">Add keychain</a>
-        <button class="btn" *ngIf="keychains.length > 0" (click)="deleteKeychain(deleteKeychainConfirmation)">
+        <button class="btn" *ngIf="keychains && keychains.length > 0" (click)="deleteKeychain(deleteKeychainConfirmation)">
           Delete selected keychain
         </button>
       </div>

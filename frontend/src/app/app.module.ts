@@ -9,6 +9,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgPipesModule } from 'ngx-pipes';
 import { ReCaptchaModule } from 'angular2-recaptcha';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MarkdownModule } from 'angular2-markdown';
 // general app configuration
 import { environment } from 'environments/environment';
 import { ROUTES } from './app.routes';
@@ -32,6 +33,7 @@ import { CryptoService } from './services/crypto.service';
 import { SessionService } from './services/session.service';
 import { MyKeychainsComponent } from './pages/my-keychains/my-keychains.component';
 import { AddKeychainComponent } from './pages/add-keychain/add-keychain.component';
+import { ChangelogComponent } from './pages/changelog';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -56,6 +58,7 @@ export function createTranslateLoader(http: HttpClient) {
     AddKeychainComponent,
     MyKeychainsComponent,
     OverviewComponent,
+    ChangelogComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +76,8 @@ export function createTranslateLoader(http: HttpClient) {
     NgPipesModule,
     ReCaptchaModule,
     UiComponentsModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    MarkdownModule
   ],
   providers: [
     environment.ENV_PROVIDERS,

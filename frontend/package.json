@@ -56,6 +56,7 @@
     "@ngx-translate/core": "^9.0.1",
     "@ngx-translate/http-loader": "^2.0.0",
     "@types/lodash": "^4.14.50",
+    "angular2-markdown": "^2.2.2",
     "angular2-recaptcha": "^0.6.0",
     "bech32": "^0.0.3",
     "bigi": "^1.4.2",
