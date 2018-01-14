@@ -64,12 +64,22 @@ export class MyKeychainsComponent implements OnInit {
       });
   }
 
-  public openDialog(dialogContent): void {
+  public addCustomIndex(dialogContent): void {
     this.customIndexForm.get('customIndex').setValue(0);
     const keychain = this.selectedChain;
     this.modalService.open(dialogContent).result.then(() => {
       this.backendService.addCustomPosition(keychain, this.selectedCoin.network.config.bip44, this.customIndex.value)
         .subscribe((position: KeyPosition) => this.addPosition(position));
+    }, noop);
+  }
+
+  public deleteKeychain(dialogContent): void {
+    const keychain = this.selectedChain;
+    this.modalService.open(dialogContent).result.then(() => {
+      this.backendService.deleteKeychain(keychain).subscribe(() => {
+        this.selectedChain = null;
+        this.ngOnInit();
+      });
     }, noop);
   }
 

@@ -67,6 +67,13 @@ export class BackendService {
     });
   }
 
+  public deleteKeychain(keychain: Keychain): Observable<HttpEvent<void>> {
+    return this.http.delete<void>(`${API_URL}/keychains/${keychain.id}`, {
+      observe: 'events',
+      headers: this.getHeaders()
+    });
+  }
+
   public increasePosition(keychain: Keychain, coinType: number): Observable<KeyPosition> {
     return this.http.post<KeyPosition>(`${API_URL}/keychains/${keychain.id}/positions/${coinType}/increase`, null, {
       observe: 'body',

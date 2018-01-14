@@ -50,6 +50,26 @@ public class KeychainResource {
         return ok(keychain);
     }
 
+    @DELETE
+    @Path("/{keychainId}")
+    public Response deleteKeychain(@PathParam("keychainId") Long keychainId) {
+        LoginContext context = LoginContextHolder.get();
+
+        if (keychainId == null) {
+            return businessError(ERROR_INVALID_INPUT);
+        }
+
+        Keychain keychain = repository.find(keychainId);
+        if (keychain == null) {
+            return entityNotFound();
+        } else if (!Objects.equals(keychain.getAccount().getId(), context.getAccount().getId())) {
+            return businessError(ERROR_INVALID_ACCESS);
+        }
+
+        repository.remove(keychain);
+        return ok();
+    }
+
     @POST
     @Path("/{keychainId}/positions/{coinType}/increase")
     public Response increaseKeyPosition(@PathParam("keychainId") Long keychainId,

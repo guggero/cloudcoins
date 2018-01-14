@@ -39,6 +39,9 @@
     <div class="col-6">
       <div class="form-group">
         <a routerLink="/add-keychain" class="btn btn-primary" role="button">Add keychain</a>
+        <button class="btn" *ngIf="keychains.length > 0" (click)="deleteKeychain(deleteKeychainConfirmation)">
+          Delete selected keychain
+        </button>
       </div>
     </div>
   </div>
@@ -99,7 +102,7 @@
     </table>
 
     <button class="btn" *ngIf="selectedCoin" (click)="newKey()">New key</button>
-    <button class="btn" *ngIf="selectedCoin" (click)="openDialog(customKeyDialog)">Add key with custom index</button>
+    <button class="btn" *ngIf="selectedCoin" (click)="addCustomIndex(customKeyDialog)">Add key with custom index</button>
   </div>
 
   <ng-template #customKeyDialog let-c="close" let-d="dismiss">
@@ -127,6 +130,22 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn" (click)="c('ok')">Ok</button>
+    </div>
+  </ng-template>
+
+  <ng-template #deleteKeychainConfirmation let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Delete Keychain?</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('close')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      Are you sure you want to delete this Keychain and all derived addresses? This cannot be undone!
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn" (click)="c('ok')">Yes, delete</button>
+      <button type="button" class="btn" (click)="d('close')">No</button>
     </div>
   </ng-template>
 </section>
