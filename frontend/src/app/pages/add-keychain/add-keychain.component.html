@@ -50,6 +50,7 @@
                    name="importedKey"
                    class="form-control"
                    formControlName="importedKey"
+                   autocomplete="false"
                    [ngClass]="{'is-invalid': (importedKey.dirty || importedKey.touched) && importedKey.invalid}"
                    id="importedKey">
             <div class="form-control-feedback invalid"
@@ -70,6 +71,7 @@
                    name="coinomiPhrase"
                    class="form-control"
                    formControlName="coinomiPhrase"
+                   autocomplete="false"
                    [ngClass]="{'is-invalid': (coinomiPhrase.dirty || coinomiPhrase.touched) && coinomiPhrase.invalid}"
                    id="coinomiPhrase">
             <div class="form-control-feedback invalid"
@@ -84,6 +86,7 @@
                    name="coinomiPassphrase"
                    class="form-control"
                    formControlName="coinomiPassphrase"
+                   autocomplete="false"
                    [ngClass]="{'is-invalid': (coinomiPassphrase.dirty || coinomiPassphrase.touched) && coinomiPassphrase.invalid}"
                    id="coinomiPassphrase">
             <small class="form-text text-muted">

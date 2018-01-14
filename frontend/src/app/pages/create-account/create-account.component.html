@@ -67,6 +67,7 @@
              name="confirmation"
              class="form-control"
              formControlName="confirmation"
+             autocomplete="false"
              [ngClass]="{'is-invalid': (confirmation.dirty || confirmation.touched) && confirmation.invalid}"
              id="confirmation">
       <div class="form-control-feedback invalid"
@@ -86,6 +87,7 @@
              name="otp"
              class="form-control"
              formControlName="otp"
+             autocomplete="false"
              [ngClass]="{'is-invalid': (otp.dirty || otp.touched) && otp.invalid}"
              id="otp">
       <div class="form-control-feedback invalid"
