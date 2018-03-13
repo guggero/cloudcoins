@@ -220,7 +220,8 @@ export const NETWORKS: Network[] = [{
     pubKeyHash: 33,
     scriptHash: 5,
     wif: 168,
-    bip44: 0x97
+    bip44: 0x97,
+    apiName: 'erc'
   }
 }, {
   label: 'HTML (HTMLCOIN)',
