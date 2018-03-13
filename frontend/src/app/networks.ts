@@ -213,6 +213,16 @@ export const NETWORKS: Network[] = [{
     noBase58: true
   }
 }, {
+  label: 'ERC (EuropeCoin)',
+  config: {
+    messagePrefix: 'unused',
+    bip32: {public: 0x0488b21e, private: 0x0488ade4},
+    pubKeyHash: 33,
+    scriptHash: 5,
+    wif: 168,
+    bip44: 0x97
+  }
+}, {
   label: 'HTML (HTMLCOIN)',
   config: {
     messagePrefix: 'unused',
